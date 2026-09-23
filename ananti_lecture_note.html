@@ -1,0 +1,3428 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>아난티 맞춤형 생성형 AI 실무 워크숍 (마스터 덱)</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Pretendard:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --ananti-dark: #111417;
+      --ananti-card-dark: #191e24;
+      --ananti-gold: #c59b6d;
+      --ananti-gold-light: #f3e8dc;
+      --ananti-gold-dark: #936a44;
+      --bg-canvas: #090b0d;
+      --border-warm: #ebdccb;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1a1a1a;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    /* Top Bar Outside Presentation */
+    #top-navbar {
+      position: relative;
+      height: 46px;
+      background: #111417;
+      border-bottom: 1px solid #22272d;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 60;
+    }
+
+    .sample-download-menu {
+      position: relative;
+    }
+    .sample-download-menu summary {
+      list-style: none;
+      cursor: pointer;
+    }
+    .sample-download-menu summary::-webkit-details-marker {
+      display: none;
+    }
+    .sample-download-list {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: min(320px, calc(100vw - 32px));
+      z-index: 70;
+    }
+
+    /* 16:9 Presentation Stage */
+    #presentation-stage {
+      position: relative;
+      width: 100vw;
+      height: calc(100vh - 106px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg-canvas);
+      overflow: hidden;
+    }
+
+    /* Slide Card */
+    .slide {
+      position: absolute;
+      width: 1280px;
+      height: 720px;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.96);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+      z-index: 10;
+    }
+
+    /* Standard Slide Header */
+    .slide-header {
+      padding: 24px 48px 12px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid #f1ece4;
+      background: #faf9f6;
+    }
+
+    .slide-body {
+      flex: 1;
+      padding: 16px 48px 14px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+      overflow-y: auto;
+      background: #ffffff;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* In-Slide Footer */
+    .slide-footer-bar {
+      height: 34px;
+      border-top: 1px solid #f1ece4;
+      background: #ffffff;
+      padding: 0 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #8c95a0;
+    }
+
+    /* Visibility Scaling */
+    .slide-body .text-xs {
+      font-size: 14px !important;
+      line-height: 1.55 !important;
+    }
+    .slide-body .text-\[11px\],
+    .slide-body .text-\[10px\],
+    .slide-body .text-\[9px\] {
+      font-size: 13px !important;
+      line-height: 1.5 !important;
+    }
+    .slide-body .text-sm {
+      font-size: 16px !important;
+      line-height: 1.55 !important;
+    }
+    .slide-body .text-base {
+      font-size: 17px !important;
+      line-height: 1.55 !important;
+    }
+    .slide-body h4 {
+      font-size: 17px !important;
+      line-height: 1.35 !important;
+    }
+    .slide-body h3 {
+      font-size: 18px !important;
+      line-height: 1.35 !important;
+    }
+    .slide-body table {
+      font-size: 13.5px !important;
+    }
+    .slide-body table th,
+    .slide-body table td {
+      padding: 6px 10px !important;
+    }
+
+    .eyebrow {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ananti-gold-dark);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .slide-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #111827;
+      line-height: 1.25;
+      margin-top: 2px;
+    }
+
+    .badge-time {
+      background: #fdf6ec;
+      border: 1px solid #faecc5;
+      color: #b45309;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    /* Prompt Box Component */
+    .prompt-box {
+      background: #171b20;
+      border: 1px solid #2d3748;
+      border-radius: 10px;
+      padding: 14px 18px;
+      color: #e2e8f0;
+      font-family: 'Pretendard', monospace;
+      font-size: 14.5px !important;
+      line-height: 1.65;
+      position: relative;
+    }
+
+    .prompt-box pre {
+      font-size: 14px !important;
+      line-height: 1.65 !important;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: rgba(197, 155, 109, 0.25);
+      border: 1px solid var(--ananti-gold);
+      color: var(--ananti-gold-light);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: var(--ananti-gold);
+      color: #121518;
+    }
+
+    /* Interactive Quiz Card */
+    .quiz-card {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .quiz-card:hover {
+      border-color: var(--ananti-gold);
+      background: #ffffff;
+    }
+    .quiz-answer {
+      display: none;
+    }
+    .quiz-card.revealed .quiz-answer {
+      display: inline-flex;
+    }
+    .quiz-card.revealed .quiz-prompt-text {
+      display: none;
+    }
+
+    /* Bottom Controller */
+    #controller {
+      height: 60px;
+      background: #111417;
+      border-top: 1px solid #20262c;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 50;
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #334155;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Overview Modal */
+    #overview-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 10, 12, 0.88);
+      backdrop-filter: blur(8px);
+      z-index: 99;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+    #overview-modal.active {
+      display: flex;
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        overflow: visible !important;
+        height: auto !important;
+        background: #ffffff !important;
+      }
+      #top-navbar, #controller, #overview-modal, #toast {
+        display: none !important;
+      }
+      #presentation-stage {
+        height: auto !important;
+        display: block !important;
+        overflow: visible !important;
+        background: #ffffff !important;
+      }
+      .slide {
+        position: relative !important;
+        opacity: 1 !important;
+        display: flex !important;
+        transform: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        width: 100% !important;
+        height: 100vh !important;
+        page-break-after: always !important;
+        border: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================= -->
+  <!-- Top Navigation Bar Outside Presentation (Always returns to Slide 1) -->
+  <!-- ========================================================================= -->
+  <header id="top-navbar">
+    <button onclick="showSlide(1)" class="flex items-center gap-3 text-left focus:outline-none group">
+      <!-- Data Thinking Lab Official Vector Logo (White version for dark topbar) -->
+      <div class="flex items-center gap-2.5 py-1 px-2 rounded-lg hover:bg-neutral-800 transition">
+        <!-- Exact DTL Speech-Bubble Grid Symbol -->
+        <svg class="w-7 h-7 shrink-0" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 20C12 11.1634 19.1634 4 28 4H92C100.837 4 108 11.1634 108 20V76C108 84.8366 100.837 92 92 92H38L18 108V92H28C19.1634 92 12 84.8366 12 76V20Z" fill="#1e2530" stroke="#374151" stroke-width="2"/>
+          <!-- 3x4 Rounded Grid Dots -->
+          <rect x="25" y="20" width="14" height="14" rx="3.5" fill="#f8fafc"/>
+          <rect x="45" y="20" width="14" height="14" rx="3.5" fill="#94a3b8"/>
+          <rect x="65" y="20" width="14" height="14" rx="3.5" fill="#64748b"/>
+          <rect x="85" y="20" width="14" height="14" rx="3.5" fill="#475569"/>
+          
+          <rect x="25" y="40" width="14" height="14" rx="3.5" fill="#c59b6d"/> <!-- Terracotta/Gold Signature Point -->
+          <rect x="45" y="40" width="14" height="14" rx="3.5" fill="#64748b"/>
+          <rect x="65" y="40" width="14" height="14" rx="3.5" fill="#475569"/>
+          <rect x="85" y="40" width="14" height="14" rx="3.5" fill="#334155"/>
+          
+          <rect x="25" y="60" width="14" height="14" rx="3.5" fill="#64748b"/>
+          <rect x="45" y="60" width="14" height="14" rx="3.5" fill="#475569"/>
+          <rect x="65" y="60" width="14" height="14" rx="3.5" fill="#94a3b8"/>
+          <rect x="85" y="60" width="14" height="14" rx="3.5" fill="#cbd5e1"/>
+        </svg>
+        <div class="flex flex-col leading-tight">
+          <span class="font-extrabold text-sm tracking-tight text-white group-hover:text-[#c59b6d] transition font-sans">Data Thinking Lab</span>
+          <span class="text-[10px] text-neutral-400 font-medium tracking-wide">AI · Data Advisor</span>
+        </div>
+      </div>
+      <span class="text-xs text-neutral-400 border-l border-neutral-700 pl-3 hidden sm:inline">
+        아난티 실무 워크숍
+      </span>
+    </button>
+
+    <div class="flex items-center gap-3 text-xs">
+      <details class="sample-download-menu">
+        <summary class="bg-neutral-800 hover:bg-neutral-700 text-neutral-100 border border-neutral-600 px-3 py-1 rounded flex items-center gap-1.5 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400">
+          <i class="fa-solid fa-download" aria-hidden="true"></i>
+          <span>샘플 데이터</span>
+          <i class="fa-solid fa-chevron-down text-[9px] text-neutral-400" aria-hidden="true"></i>
+        </summary>
+        <div class="sample-download-list bg-[#191e24] border border-neutral-600 rounded-lg shadow-xl p-2 text-neutral-100">
+          <p class="px-2 py-1 text-[11px] text-neutral-400">실습 파일 다운로드</p>
+          <a href="sample_data/1. 기초정보 DB(sample).xlsx" download="1. 기초정보 DB(sample).xlsx" class="block px-2 py-2 rounded hover:bg-neutral-700 focus-visible:bg-neutral-700">
+            <i class="fa-regular fa-file-excel text-emerald-400 mr-1" aria-hidden="true"></i> 1. 기초정보 DB(sample).xlsx
+          </a>
+          <a href="sample_data/3. 오프라인 DB(sample).xlsx" download="3. 오프라인 DB(sample).xlsx" class="block px-2 py-2 rounded hover:bg-neutral-700 focus-visible:bg-neutral-700">
+            <i class="fa-regular fa-file-excel text-emerald-400 mr-1" aria-hidden="true"></i> 3. 오프라인 DB(sample).xlsx
+          </a>
+          <a href="sample_data/아난티_고객_VOC_샘플.csv" download="아난티_고객_VOC_샘플.csv" class="block px-2 py-2 rounded hover:bg-neutral-700 focus-visible:bg-neutral-700">
+            <i class="fa-solid fa-file-csv text-blue-300 mr-1" aria-hidden="true"></i> 아난티_고객_VOC_샘플.csv
+          </a>
+        </div>
+      </details>
+      <a href="https://padlet.com/datathinkinglab/ananti" target="_blank" class="bg-amber-950/60 hover:bg-amber-900 text-amber-300 border border-amber-700/50 px-3 py-1 rounded flex items-center gap-1.5 transition">
+        <i class="fa-solid fa-chalkboard"></i>
+        <span>전용 패들렛 (Padlet)</span>
+        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+      </a>
+      <a href="https://www.datathinkinglab.com" target="_blank" class="text-neutral-400 hover:text-neutral-200 flex items-center gap-1 transition">
+        <i class="fa-solid fa-globe"></i>
+        <span class="hidden md:inline">datathinkinglab.com</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- Presentation Stage -->
+  <!-- ========================================================================= -->
+  <div id="presentation-stage">
+
+    <!-- Slide 1: Cover (Dark Luxury Anchor) -->
+    <div class="slide active" id="slide-1" style="background: #111417; color: #ffffff; justify-content: space-between; padding: 48px 64px;">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-xs tracking-[0.2em] font-bold text-[#c59b6d] border border-[#c59b6d]/50 px-3 py-1 rounded">ANANTI X DATA THINKING LAB</span>
+          <span class="text-xs text-neutral-400">실습 집중형 생성형 AI 워크숍</span>
+        </div>
+        <div class="text-xs font-semibold text-neutral-400 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> 온·오프라인 하이브리드 LIVE
+        </div>
+      </div>
+
+      <div class="max-w-4xl space-y-3.5">
+        <p class="text-sm font-semibold tracking-wide text-[#c59b6d] uppercase">
+          데이터에서 판단으로, 판단에서 나만의 업무 도구로
+        </p>
+        <h1 class="text-5xl font-extrabold text-white leading-tight tracking-tight">
+          엑셀과 씨름하던 데이터 업무,<br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#e6cbaf] via-[#c59b6d] to-[#d4af37]">AI에게 맡기고 결과물로 끝내기</span>
+        </h1>
+        <p class="text-base text-neutral-300 leading-relaxed max-w-2xl pt-1">
+          기초정보 가명화부터 오프라인 결제 오류 정제, 이종 DB 교차 분석, 정성 VOC 텍스트 마이닝, 브라우저 즉시 구동 1-Page HTML 대시보드 제작까지 직접 완성합니다.
+        </p>
+      </div>
+
+      <div class="pt-4 border-t border-neutral-800 flex items-center justify-between">
+        <div class="flex items-center gap-10 text-xs text-neutral-300">
+          <div>
+            <p class="text-neutral-500 mb-0.5">강사</p>
+            <p class="font-bold text-white text-sm">이승묵 박사 <span class="text-xs text-neutral-400 font-normal">(데이터씽킹랩 대표)</span></p>
+          </div>
+          <div>
+            <p class="text-neutral-500 mb-0.5">대상</p>
+            <p class="font-bold text-white text-sm">경영지원·재무·객실/F&B 운영·멤버십 실무진</p>
+          </div>
+          <div>
+            <p class="text-neutral-500 mb-0.5">진행 방식</p>
+            <p class="font-bold text-[#c59b6d] text-sm">참여자 중심 실습 & 라이브 코칭</p>
+          </div>
+        </div>
+        <div class="text-xs text-neutral-500 font-mono">Press [Space] or [→] to begin</div>
+      </div>
+    </div>
+
+    <!-- Slide 2: 강사 소개 (Instructor Profile) -->
+    <div class="slide" id="slide-2">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-user-tie"></i> INSTRUCTOR PROFILE</span>
+          <h2 class="slide-title">강사 소개: AI와 데이터로 현실의 문제를 해결하는 실무 전문가</h2>
+        </div>
+        <span class="badge-time">데이터씽킹랩 대표</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-12 gap-5 items-stretch h-full">
+          <!-- Left: Caricature Portrait & Identity Card -->
+          <div class="col-span-4 bg-[#111417] p-4 rounded-xl text-white flex flex-col justify-between border border-neutral-800 shadow-md">
+            <!-- Caricature Frame with Graceful Fallback -->
+            <div class="relative w-full rounded-lg overflow-hidden bg-neutral-900 border border-neutral-700/70 shadow-sm flex-1 max-h-[340px] flex items-center justify-center group">
+              <img src="통계학박사_이승묵_프로필_캐리커처.png" 
+                   alt="이승묵 박사 프로필 캐리커처" 
+                   onerror="this.onerror=null; this.src='https://placehold.co/400x520/191e24/c59b6d?text=Dr.+Seungmook+Lee';" 
+                   class="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105" />
+              <!-- Bottom Name Overlay Tag -->
+              <div class="absolute bottom-2 left-2 right-2 bg-[#111417]/90 backdrop-blur-md px-3 py-1.5 rounded-md border border-neutral-700/80 flex items-center justify-between">
+                <div>
+                  <span class="text-xs font-extrabold text-white block">이승묵 박사</span>
+                  <span class="text-[10px] text-neutral-400">통계학 박사 (Ph.D)</span>
+                </div>
+                <span class="text-[10px] text-[#c59b6d] font-bold bg-[#c59b6d]/15 px-2 py-0.5 rounded border border-[#c59b6d]/30">Data Thinking Lab</span>
+              </div>
+            </div>
+
+            <!-- Identity Core Philosophy Note -->
+            <div class="mt-2.5 p-2.5 bg-neutral-900/90 rounded-lg border border-neutral-800 text-neutral-300 space-y-1">
+              <p class="font-bold text-[#e6cbaf] text-xs flex items-center gap-1.5">
+                <i class="fa-solid fa-quote-left text-[#c59b6d] text-[10px]"></i>
+                "데이터는 사람을 위한 것입니다."
+              </p>
+              <p class="text-[11px] text-neutral-400 leading-snug">
+                데이터로 더 좋은 세상을 만들고, 누구나 쉽게 실무 문제를 해결할 수 있는 힘을 기릅니다.
+              </p>
+            </div>
+
+            <!-- Website Link -->
+            <div class="pt-2 mt-1.5 border-t border-neutral-800 flex items-center justify-between text-xs">
+              <a href="https://www.datathinkinglab.com" target="_blank" class="text-[#c59b6d] font-bold flex items-center gap-1.5 hover:underline text-[11.5px]">
+                <i class="fa-solid fa-globe"></i> www.datathinkinglab.com
+              </a>
+              <span class="text-[10px] text-neutral-500 font-mono">Think with Data</span>
+            </div>
+          </div>
+
+          <!-- Right: Experience & Value Delivery Pipeline -->
+          <div class="col-span-8 flex flex-col justify-between space-y-2.5">
+            <!-- Academic & Core Overview -->
+            <div class="bg-neutral-50/80 border border-neutral-200 p-3.5 rounded-xl">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="font-bold text-neutral-900 text-sm flex items-center gap-2">
+                  <i class="fa-solid fa-graduation-cap text-[#936a44]"></i> 학력 및 전문 역량
+                </h4>
+                <span class="text-[11px] font-semibold text-neutral-500">17년+ 데이터 사이언스 & 엔터프라이즈 AI</span>
+              </div>
+              <div class="grid grid-cols-3 gap-2 text-xs text-neutral-700">
+                <div class="bg-white p-2.5 rounded-lg border border-neutral-200/80">
+                  <b class="text-neutral-900 block text-xs">서울대학교 통계학 박사</b>
+                  <span class="text-[11px] text-neutral-500">자연과학대학 통계학 전공</span>
+                </div>
+                <div class="bg-white p-2.5 rounded-lg border border-neutral-200/80">
+                  <b class="text-neutral-900 block text-xs">엔터프라이즈 AI 리딩</b>
+                  <span class="text-[11px] text-neutral-500">전사 CDO / CIO / 데이터센터장</span>
+                </div>
+                <div class="bg-white p-2.5 rounded-lg border border-neutral-200/80">
+                  <b class="text-neutral-900 block text-xs">실무 맞춤형 바이브코딩</b>
+                  <span class="text-[11px] text-neutral-500">비개발자 데이터 도구화 전문</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Leadership Career Grid -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <h4 class="font-bold text-neutral-900 text-sm flex items-center gap-2">
+                  <i class="fa-solid fa-briefcase text-[#936a44]"></i> 주요 엔터프라이즈 리더십 & 경력
+                </h4>
+                <span class="text-[10px] font-mono text-neutral-400">ENTERPRISE TRACK RECORD</span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="border border-neutral-200 bg-white p-3 rounded-xl space-y-1 shadow-xs">
+                  <b class="text-neutral-900 block text-xs font-bold">GS리테일 상무보 / 부문장 (CDO)</b>
+                  <p class="text-[11px] text-neutral-600 leading-relaxed">데이터사이언스부문 총괄, AI 수요예측 및 전사 디지털 트랜스포메이션(DX) 과제 리딩</p>
+                </div>
+                <div class="border border-neutral-200 bg-white p-3 rounded-xl space-y-1 shadow-xs">
+                  <b class="text-neutral-900 block text-xs font-bold">지니너스 상무 (CIO / CDO)</b>
+                  <p class="text-[11px] text-neutral-600 leading-relaxed">데이터사이언스센터장, AI 기반 임상 빅데이터 분석 플랫폼 설계 및 IT 총괄</p>
+                </div>
+                <div class="border border-neutral-200 bg-white p-3 rounded-xl space-y-1 shadow-xs">
+                  <b class="text-neutral-900 block text-xs font-bold">현대카드 Team Leader</b>
+                  <p class="text-[11px] text-neutral-600 leading-relaxed">PLCC 플랫폼 분석 리딩, 대형 유통/소비사 대상 AI 예측 모델링 및 데이터 인사이트 발굴</p>
+                </div>
+                <div class="border border-neutral-200 bg-white p-3 rounded-xl space-y-1 shadow-xs">
+                  <b class="text-neutral-900 block text-xs font-bold">삼성SDS Data Scientist</b>
+                  <p class="text-[11px] text-neutral-600 leading-relaxed">빅데이터 분석 알고리즘 개발 및 엔터프라이즈 AI 솔루션 컨설팅 수행</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Value Delivery Pipeline from Poster -->
+            <div class="p-3 bg-[#fcf9f5] border border-[#f0e6dc] rounded-xl">
+              <span class="text-[11px] font-bold text-[#936a44] block mb-1.5 uppercase tracking-wider">
+                <i class="fa-solid fa-arrows-split-up-and-left mr-1"></i> Data Thinking Lab Value Pipeline
+              </span>
+              <div class="flex items-center justify-between text-[11px] font-bold text-neutral-700 bg-white px-3 py-2 rounded-lg border border-[#ebdccb]">
+                <span class="flex items-center gap-1"><i class="fa-regular fa-lightbulb text-amber-500"></i> IDEA</span>
+                <i class="fa-solid fa-arrow-right text-neutral-300 text-[9px]"></i>
+                <span class="flex items-center gap-1"><i class="fa-solid fa-database text-blue-500"></i> DATA</span>
+                <i class="fa-solid fa-arrow-right text-neutral-300 text-[9px]"></i>
+                <span class="flex items-center gap-1"><i class="fa-solid fa-gear text-purple-500"></i> ANALYSIS</span>
+                <i class="fa-solid fa-arrow-right text-neutral-300 text-[9px]"></i>
+                <span class="flex items-center gap-1"><i class="fa-solid fa-chart-simple text-emerald-500"></i> INSIGHT</span>
+                <i class="fa-solid fa-arrow-right text-neutral-300 text-[9px]"></i>
+                <span class="flex items-center gap-1"><i class="fa-solid fa-users text-rose-500"></i> ACTION</span>
+                <i class="fa-solid fa-arrow-right text-neutral-300 text-[9px]"></i>
+                <span class="flex items-center gap-1 text-[#936a44]"><i class="fa-solid fa-earth-americas"></i> BETTER TOMORROW</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-2">
+          <!-- DTL Mini Logo Symbol -->
+          <svg class="w-4 h-4 shrink-0" viewBox="0 0 120 120" fill="none">
+            <path d="M12 20C12 11.1634 19.1634 4 28 4H92C100.837 4 108 11.1634 108 20V76C108 84.8366 100.837 92 92 92H38L18 108V92H28C19.1634 92 12 84.8366 12 76V20Z" fill="#1e2530"/>
+            <rect x="25" y="20" width="14" height="14" rx="3.5" fill="#f8fafc"/>
+            <rect x="45" y="20" width="14" height="14" rx="3.5" fill="#94a3b8"/>
+            <rect x="65" y="20" width="14" height="14" rx="3.5" fill="#64748b"/>
+            <rect x="85" y="20" width="14" height="14" rx="3.5" fill="#475569"/>
+            <rect x="25" y="40" width="14" height="14" rx="3.5" fill="#c59b6d"/>
+            <rect x="45" y="40" width="14" height="14" rx="3.5" fill="#64748b"/>
+            <rect x="65" y="40" width="14" height="14" rx="3.5" fill="#475569"/>
+            <rect x="85" y="40" width="14" height="14" rx="3.5" fill="#334155"/>
+            <rect x="25" y="60" width="14" height="14" rx="3.5" fill="#64748b"/>
+            <rect x="45" y="60" width="14" height="14" rx="3.5" fill="#475569"/>
+            <rect x="65" y="60" width="14" height="14" rx="3.5" fill="#94a3b8"/>
+            <rect x="85" y="60" width="14" height="14" rx="3.5" fill="#cbd5e1"/>
+          </svg>
+          <span class="font-bold text-neutral-700 text-xs">Data Thinking Lab</span>
+        </div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 3: 프롤로그 - 실무자의 페인포인트 -->
+    <div class="slide" id="slide-3">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-hourglass-half"></i> PROLOGUE · AS-IS PAIN POINTS</span>
+          <h2 class="slide-title">우리는 왜 매주 엑셀과 씨름하며 야근하는가?</h2>
+        </div>
+        <span class="badge-time">현업 공감 진단</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-3 gap-5">
+          <div class="bg-rose-50/50 border-2 border-rose-100 p-5 rounded-xl">
+            <div class="w-10 h-10 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-lg mb-3">
+              <i class="fa-solid fa-broom"></i>
+            </div>
+            <h4 class="font-bold text-neutral-900 text-base mb-2">1. 끝없는 데이터 손질</h4>
+            <p class="text-xs text-neutral-600 leading-relaxed">
+              날짜 포맷 불일치, 결측값, 환불 건 수기 분리, VLOOKUP 수식 오류 등 순수 분석 시간보다 데이터 다듬기에 70% 소모.
+            </p>
+          </div>
+
+          <div class="bg-amber-50/50 border-2 border-amber-100 p-5 rounded-xl">
+            <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-lg mb-3">
+              <i class="fa-solid fa-chart-pie"></i>
+            </div>
+            <h4 class="font-bold text-neutral-900 text-base mb-2">2. 숫자에 갇힌 보고서</h4>
+            <p class="text-xs text-neutral-600 leading-relaxed">
+              "VIP 결제가 늘었습니다"라는 단순 수치 나열에 그쳐, "그래서 내일 현장에서 무엇을 개선해야 하는가?"라는 질문에 답하기 어려움.
+            </p>
+          </div>
+
+          <div class="bg-blue-50/50 border-2 border-blue-100 p-5 rounded-xl">
+            <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-lg mb-3">
+              <i class="fa-solid fa-repeat"></i>
+            </div>
+            <h4 class="font-bold text-neutral-900 text-base mb-2">3. 매주 반복되는 일회성 수작업</h4>
+            <p class="text-xs text-neutral-600 leading-relaxed">
+              지난주에 만든 보고서라도 다음 주에 새로운 POS 데이터가 들어오면 처음부터 수식과 피벗 테이블을 다시 조립해야 하는 비효율.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-3.5 bg-neutral-900 text-white rounded-xl flex items-center justify-between text-xs mt-1">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-lightbulb text-[#c59b6d] text-base"></i>
+            <span class="font-bold text-[#e6cbaf]">오늘의 약속:</span>
+            <span>"데이터 정제와 차트 그리기는 AI에게 위임하고, 사람은 <b>판단과 현장 실행</b>에 집중합니다."</span>
+          </div>
+          <span class="text-neutral-400">Think with Data</span>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 4: 4종 실무 산출물 로드맵 (보안 룰북 반영) -->
+    <div class="slide" id="slide-4">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-bullseye"></i> OBJECTIVE & DELIVERABLES</span>
+          <h2 class="slide-title">오늘 교육이 끝나면 손에 남는 4종의 실무 산출물</h2>
+        </div>
+        <span class="badge-time">결과물 중심 설계</span>
+      </div>
+      <div class="slide-body">
+        <div class="p-3 bg-[#fbf9f6] border border-[#f0e6dc] rounded-xl flex items-center justify-between">
+          <span class="text-xs font-bold text-[#936a44]">실습 파이프라인</span>
+          <div class="flex items-center gap-2 text-xs font-bold text-neutral-700">
+            <span class="bg-white px-3 py-1 rounded-lg border">① 불편 정의</span>
+            <i class="fa-solid fa-arrow-right text-neutral-400 text-[10px]"></i>
+            <span class="bg-white px-3 py-1 rounded-lg border">② 보안 룰북 확립</span>
+            <i class="fa-solid fa-arrow-right text-neutral-400 text-[10px]"></i>
+            <span class="bg-white px-3 py-1 rounded-lg border">③ 대화형 교차분석</span>
+            <i class="fa-solid fa-arrow-right text-neutral-400 text-[10px]"></i>
+            <span class="bg-white px-3 py-1 rounded-lg border">④ 단일파일 도구화</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-4 gap-4 mt-1">
+          <div class="bg-white border-2 border-neutral-100 hover:border-[#c59b6d] transition p-4 rounded-xl shadow-sm">
+            <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded">Deliverable 01</span>
+            <h4 class="font-bold text-sm text-neutral-900 mt-2 mb-1">사내 AI 데이터 보안 룰북</h4>
+            <p class="text-xs text-neutral-500 mb-2">Module 02 결과물</p>
+            <ul class="text-[11px] text-neutral-600 space-y-1">
+              <li>• 신호등 3단계 실무 판정표</li>
+              <li>• 개인 식별정보 자동 마스킹 프롬프트</li>
+              <li>• 실무용 보안 체크리스트</li>
+            </ul>
+          </div>
+
+          <div class="bg-white border-2 border-neutral-100 hover:border-[#c59b6d] transition p-4 rounded-xl shadow-sm">
+            <span class="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">Deliverable 02</span>
+            <h4 class="font-bold text-sm text-neutral-900 mt-2 mb-1">교차 분석 인사이트 리포트</h4>
+            <p class="text-xs text-neutral-500 mb-2">Module 03 결과물</p>
+            <ul class="text-[11px] text-neutral-600 space-y-1">
+              <li>• 회원등급 × F&B 결제 조인</li>
+              <li>• 피크타임 및 주중 가동률 결함</li>
+              <li>• 현장 실행 과제 3선</li>
+            </ul>
+          </div>
+
+          <div class="bg-white border-2 border-neutral-100 hover:border-[#c59b6d] transition p-4 rounded-xl shadow-sm">
+            <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">Deliverable 03</span>
+            <h4 class="font-bold text-sm text-neutral-900 mt-2 mb-1">1-Page CX 기획안</h4>
+            <p class="text-xs text-neutral-500 mb-2">Module 04 결과물</p>
+            <ul class="text-[11px] text-neutral-600 space-y-1">
+              <li>• VOC 불만(조식대기) 원인 추출</li>
+              <li>• 2026 웰니스 트렌드 융합</li>
+              <li>• 인룸 다이닝 패키지 제안서</li>
+            </ul>
+          </div>
+
+          <div class="bg-white border-2 border-neutral-100 hover:border-[#c59b6d] transition p-4 rounded-xl shadow-sm">
+            <span class="text-xs font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded">Deliverable 04</span>
+            <h4 class="font-bold text-sm text-neutral-900 mt-2 mb-1">1-Page HTML 대시보드</h4>
+            <p class="text-xs text-neutral-500 mb-2">Module 05 결과물</p>
+            <ul class="text-[11px] text-neutral-600 space-y-1">
+              <li>• 브라우저 더블클릭 단일 웹앱</li>
+              <li>• KPI 카드 4종 + 동적 차트</li>
+              <li>• 업장 필터링 검색 지원</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 5: 수강생 맞춤형 5단계 역량 완성 여정 (시간 배제, 수강생 관점) -->
+    <div class="slide" id="slide-5">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-graduation-cap"></i> LEARNING JOURNEY</span>
+          <h2 class="slide-title">오늘 여러분이 밟아갈 5단계 AI 실무 역량 완성 여정</h2>
+        </div>
+        <span class="badge-time">수강생 로드맵</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-5 gap-3 text-xs">
+          <div class="border border-neutral-200 bg-neutral-50 p-3 rounded-xl flex flex-col justify-between">
+            <div>
+              <span class="font-bold text-neutral-800 block text-sm mb-1">Step 1. 도구 비교</span>
+              <p class="text-neutral-500 mb-2">내 업무에 맞는 AI 매핑</p>
+              <p class="text-neutral-600 leading-relaxed">ChatGPT vs Gemini 동일 질문 블라인드 테스트로 강약점 파악</p>
+            </div>
+            <span class="text-[11px] font-bold text-blue-700 mt-2">도구 선택력</span>
+          </div>
+
+          <div class="border-2 border-amber-300 bg-amber-50/40 p-3 rounded-xl flex flex-col justify-between">
+            <div>
+              <span class="font-bold text-amber-900 block text-sm mb-1">Step 2. 보안·정제</span>
+              <p class="text-amber-700 font-bold mb-2">사내 데이터 보호 수칙</p>
+              <p class="text-neutral-700 leading-relaxed">신호등 3단계 판정, 고객 마스킹, POS 결측 정제 룰북 체화</p>
+            </div>
+            <span class="text-[11px] font-bold text-amber-800 mt-2">안전한 데이터</span>
+          </div>
+
+          <div class="border border-neutral-200 bg-neutral-50 p-3 rounded-xl flex flex-col justify-between">
+            <div>
+              <span class="font-bold text-neutral-800 block text-sm mb-1">Step 3. 대화형 분석</span>
+              <p class="text-neutral-500 mb-2">자연어 이종 DB 결합</p>
+              <p class="text-neutral-600 leading-relaxed">5패턴 질의로 회원등급과 결제 데이터를 묶어 이상치 도출</p>
+            </div>
+            <span class="text-[11px] font-bold text-purple-700 mt-2">교차 인사이트</span>
+          </div>
+
+          <div class="border border-neutral-200 bg-neutral-50 p-3 rounded-xl flex flex-col justify-between">
+            <div>
+              <span class="font-bold text-neutral-800 block text-sm mb-1">Step 4. VOC 융합</span>
+              <p class="text-neutral-500 mb-2">감성 분석 & 기획안</p>
+              <p class="text-neutral-600 leading-relaxed">고객 불만 원인 추출 후 트렌드 결합 1-Page 기획안 작성</p>
+            </div>
+            <span class="text-[11px] font-bold text-rose-700 mt-2">CX 차별화</span>
+          </div>
+
+          <div class="border border-neutral-200 bg-neutral-50 p-3 rounded-xl flex flex-col justify-between">
+            <div>
+              <span class="font-bold text-neutral-800 block text-sm mb-1">Step 5. 도구화</span>
+              <p class="text-neutral-500 mb-2">나만의 웹앱 구축</p>
+              <p class="text-neutral-600 leading-relaxed">바이브코딩으로 브라우저 즉시 구동 1-Page 대시보드 완성</p>
+            </div>
+            <span class="text-[11px] font-bold text-indigo-700 mt-2">실무 도구 완성</span>
+          </div>
+        </div>
+
+        <div class="bg-neutral-900 text-neutral-200 p-3 rounded-xl flex items-center justify-between text-xs">
+          <span><b>워크숍 진행 공식:</b> [미션 확인 및 즉시 실행] → [간편 자율 검증] → [실시간 라이브 코칭]</span>
+          <span class="text-[#c59b6d] font-bold">참여자가 직접 키보드를 치며 결과물을 완성합니다.</span>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 6: 비대면(Zoom) 참여자 실시간 상호작용 체계 (수강생 관점 개편) -->
+    <div class="slide" id="slide-6">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-video"></i> HYBRID INTERACTION</span>
+          <h2 class="slide-title">비대면(Zoom) 참여자를 위한 부담 없는 3중 참여 체계</h2>
+        </div>
+        <span class="badge-time">간편 참여 가이드</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-3 gap-5">
+          <div class="border border-neutral-200 p-4 rounded-xl bg-white space-y-2">
+            <div class="w-9 h-9 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-base">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+            </div>
+            <h4 class="font-bold text-sm text-neutral-900">1. 패들렛 원클릭 인증</h4>
+            <p class="text-xs text-neutral-600 leading-relaxed">
+              모듈이 끝날 때마다 결과 캡처나 텍스트 한 줄을 전용 패들렛 열에 등록합니다. 동료들의 결과물도 한눈에 볼 수 있습니다.
+            </p>
+          </div>
+
+          <div class="border border-neutral-200 p-4 rounded-xl bg-white space-y-2">
+            <div class="w-9 h-9 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-base">
+              <i class="fa-solid fa-desktop"></i>
+            </div>
+            <h4 class="font-bold text-sm text-neutral-900">2. 가벼운 화면 공유 코칭</h4>
+            <p class="text-xs text-neutral-600 leading-relaxed">
+              실습 중 막히거나 애매한 부분이 있으면 화면을 편하게 공유하세요. 모호한 프롬프트를 실시간으로 명확하게 다듬어 드립니다.
+            </p>
+          </div>
+
+          <div class="border border-neutral-200 p-4 rounded-xl bg-white space-y-2">
+            <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-base">
+              <i class="fa-solid fa-comments"></i>
+            </div>
+            <h4 class="font-bold text-sm text-neutral-900">3. 10초 채팅창 반응</h4>
+            <p class="text-xs text-neutral-600 leading-relaxed">
+              작업 완료 시 채팅창에 '1', 궁금한 점은 편한 단어로 남겨주시면 실시간으로 확인하고 함께 소통합니다.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs text-amber-950 flex items-center justify-between">
+          <span><b>권장 환경:</b> 좌측에 <b>Zoom 화면</b>, 우측에 <b>AI 대화창 & 엑셀</b>을 배치하는 듀얼 모니터 세팅을 추천합니다.</span>
+          <a href="https://padlet.com/datathinkinglab/ananti" target="_blank" class="font-bold text-amber-800 hover:underline">패들렛 바로가기 →</a>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 7: [실습 0-1] 작업 환경 세팅 & 패들렛 링크 반영 -->
+    <div class="slide" id="slide-7">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-play"></i> HANDS-ON 00-1 · SETUP</span>
+          <h2 class="slide-title">[실습 0-1] 실습 샌드박스 셋업 & 전용 패들렛 접속</h2>
+        </div>
+        <span class="badge-time">실습 셋업</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-12 gap-5">
+          <div class="col-span-7 space-y-2.5">
+            <h3 class="text-sm font-bold text-neutral-900">지금 바로 아래 3단계를 완료해 주세요:</h3>
+            <div class="space-y-2 text-xs">
+              <div class="p-3 bg-neutral-50 rounded-lg border border-neutral-200 flex items-start gap-2.5">
+                <span class="w-5 h-5 rounded-full bg-neutral-800 text-white flex items-center justify-center font-bold text-[11px] shrink-0 mt-0.5">1</span>
+                <div>
+                  <b>크롬/엣지 브라우저에서 AI 창 열기:</b>
+                  <p class="text-neutral-500 mt-0.5">ChatGPT (chatgpt.com) 또는 Google Gemini (gemini.google.com)에 로그인</p>
+                </div>
+              </div>
+
+              <div class="p-3 bg-neutral-50 rounded-lg border border-neutral-200 flex items-start gap-2.5">
+                <span class="w-5 h-5 rounded-full bg-neutral-800 text-white flex items-center justify-center font-bold text-[11px] shrink-0 mt-0.5">2</span>
+                <div>
+                  <b>아난티 전용 패들렛(Padlet) 보드 접속:</b>
+                  <p class="text-neutral-700 mt-0.5 font-mono text-amber-700 font-bold">
+                    <a href="https://padlet.com/datathinkinglab/ananti" target="_blank" class="underline">https://padlet.com/datathinkinglab/ananti</a>
+                  </p>
+                </div>
+              </div>
+
+              <div class="p-3 bg-neutral-50 rounded-lg border border-neutral-200 flex items-start gap-2.5">
+                <span class="w-5 h-5 rounded-full bg-neutral-800 text-white flex items-center justify-center font-bold text-[11px] shrink-0 mt-0.5">3</span>
+                <div>
+                  <b>실습 데이터셋 다운로드 확인:</b>
+                  <p class="text-neutral-500 mt-0.5">바탕화면에 <code>아난티_AI실습</code> 폴더 생성 및 3종 파일 준비</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-span-5 bg-neutral-900 text-white p-4 rounded-xl flex flex-col justify-between">
+            <div>
+              <span class="text-xs font-bold text-[#c59b6d] block mb-1.5">LIVE CHECK</span>
+              <h4 class="text-base font-bold text-white mb-1.5">준비 완료 신호</h4>
+              <p class="text-xs text-neutral-300 leading-relaxed mb-3">
+                브라우저에 AI 창과 패들렛 창을 모두 띄우신 분은 Zoom 채팅창에 <b>'준비완료'</b>를 남겨주세요.
+              </p>
+            </div>
+            <div class="p-2 bg-neutral-800 rounded-lg text-neutral-300 text-xs flex items-center gap-2">
+              <i class="fa-solid fa-link text-[#c59b6d]"></i>
+              <span class="truncate">Padlet: padlet.com/datathinkinglab/ananti</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 8: [실습 0-2] 3종 데이터셋 웜업 로드 테스트 -->
+    <div class="slide" id="slide-8">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-folder-open"></i> HANDS-ON 00-2 · DATA CHECK</span>
+          <h2 class="slide-title">[실습 0-2] 3초 웜업: 실습 데이터셋 3종 구조 확인</h2>
+        </div>
+        <span class="badge-time">데이터 확인</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="border border-neutral-200 p-3.5 rounded-xl bg-white">
+            <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded">데이터 01</span>
+            <h4 class="font-bold text-sm text-neutral-900 mt-2 mb-1">1. 기초정보 DB (sample).xlsx</h4>
+            <p class="text-xs text-neutral-500 mb-2">100행 · 교육용 가상 고객/회원 마스터</p>
+            <p class="text-xs text-neutral-600 leading-relaxed">
+              고객명, 생년월일, 휴대폰번호, 회원등급(VIP/무브/프렌즈/일반), 거주지역.
+            </p>
+            <span class="text-[10px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded mt-2 inline-block">마스킹 대상</span>
+          </div>
+
+          <div class="border border-neutral-200 p-3.5 rounded-xl bg-white">
+            <span class="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">데이터 02</span>
+            <h4 class="font-bold text-sm text-neutral-900 mt-2 mb-1">3. 오프라인 DB (sample).xlsx</h4>
+            <p class="text-xs text-neutral-500 mb-2">500행 · 결제 트랜잭션 원장</p>
+            <p class="text-xs text-neutral-600 leading-relaxed">
+              영수증번호, 결제일시, 업장명(라포레, 맥퀸즈 등), 결제금액, 고객번호.
+            </p>
+            <span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded mt-2 inline-block">결측·환불 정제 대상</span>
+          </div>
+
+          <div class="border border-neutral-200 p-3.5 rounded-xl bg-white">
+            <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">데이터 03</span>
+            <h4 class="font-bold text-sm text-neutral-900 mt-2 mb-1">아난티 고객 VOC 샘플.csv</h4>
+            <p class="text-xs text-neutral-500 mb-2">120행 · 고객 리뷰 텍스트</p>
+            <p class="text-xs text-neutral-600 leading-relaxed">
+              접수일자, 회원등급, 이용영역(F&B, 객실 등), 비정형 리뷰 원문, 만족도.
+            </p>
+            <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded mt-2 inline-block">감성 분석 대상</span>
+          </div>
+        </div>
+
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-terminal"></i> [실습 0-2] AI 창에 '3. 오프라인 DB'를 드롭하고 첫 프롬프트 실행하기
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-0-2')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-0-2" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">첨부한 [3. 오프라인 DB(sample).xlsx] 파일의 전체 행(Row) 수와 컬럼 목록을 확인해줘.
+그리고 어떤 업장들이 포함되어 있는지 고유 업장명 리스트를 글머리 기호로 요약해줘.</pre>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 9: Module 1 오프닝 -->
+    <div class="slide" id="slide-9">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-compass"></i> MODULE 01 · TOOL SELECTION</span>
+          <h2 class="slide-title">도구를 알면 삽질이 멈춘다: AI 3대 도구 분석 특성 비교</h2>
+        </div>
+        <span class="badge-time">도구 특성 매핑</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-12 gap-5 items-center">
+          <div class="col-span-7 space-y-2.5">
+            <h3 class="text-base font-bold text-neutral-900">"가장 똑똑한 AI가 아니라, 내 업무 데이터에 가장 안전하고 적합한 AI를 씁니다."</h3>
+            <p class="text-xs text-neutral-600 leading-relaxed">
+              AI 모델마다 특화된 장단점이 다릅니다. 숫자를 다룰 때, 구글 시트를 가공할 때, 장문의 고객 불만 글을 읽어낼 때 최적의 도구를 짝지어 쓰는 것이 핵심 리터러시입니다.
+            </p>
+            <div class="p-3 bg-neutral-100 rounded-lg border border-neutral-200 text-xs space-y-1">
+              <p><b>• ChatGPT:</b> 파이썬 연산 엔진 기반, 통계 수치 및 차트 렌더링 최강자</p>
+              <p><b>• Gemini:</b> 구글 시트/드라이브 즉시 연동, 최신 웹 검색 및 멀티모달 인식</p>
+              <p><b>• Claude:</b> 미묘한 뉘앙스 파악, 장문 VOC 감성 분석 및 정제된 비즈니스 작문</p>
+            </div>
+          </div>
+          <div class="col-span-5 bg-neutral-900 p-4 rounded-xl text-white space-y-2">
+            <span class="text-xs font-bold text-[#c59b6d] block">CORE PRINCIPLE</span>
+            <h4 class="text-sm font-bold text-[#e6cbaf]">"질문 하나 던져보고 AI의 한계를 판단하지 마라"</h4>
+            <p class="text-xs text-neutral-300 leading-relaxed">
+              동일한 업무 질문이라도 도구에 따라 관점(전략 vs 정량 지표 vs 감성)이 완전히 다릅니다. 바로 비교 실습을 통해 확인합니다.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 10: 3대 도구 매핑 매트릭스 -->
+    <div class="slide" id="slide-10">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-table-columns"></i> TOOL MAPPING</span>
+          <h2 class="slide-title">아난티 업무 상황별 3대 AI 도구 매핑 매트릭스</h2>
+        </div>
+        <span class="badge-time">업무 매핑 기준</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="border-2 border-emerald-100 bg-emerald-50/20 p-4 rounded-xl flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-bold text-emerald-800 text-sm">Gemini</span>
+                <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">시트 연계</span>
+              </div>
+              <h4 class="text-xs font-bold text-neutral-900 mb-2">Google Sheets 연동 & 멀티모달</h4>
+              <ul class="text-xs text-neutral-600 space-y-1.5">
+                <li>• 구글 드라이브 엑셀 파일 즉시 가공</li>
+                <li>• 실시간 웹 검색 기반 시장 트렌드 조사</li>
+                <li>• 영수증/시설 사진 다중 인식</li>
+              </ul>
+            </div>
+            <div class="pt-2.5 border-t border-emerald-100 text-[11px] text-emerald-800 font-bold">
+              추천: 엑셀 전처리, 주중 시장 동향 리서치
+            </div>
+          </div>
+
+          <div class="border-2 border-blue-100 bg-blue-50/20 p-4 rounded-xl flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-bold text-blue-800 text-sm">ChatGPT (데이터 분석)</span>
+                <span class="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold">파이썬 연산</span>
+              </div>
+              <h4 class="text-xs font-bold text-neutral-900 mb-2">Python Advanced Data Analysis</h4>
+              <ul class="text-xs text-neutral-600 space-y-1.5">
+                <li>• 복합 수치 계산 및 무결성 검증</li>
+                <li>• 고해상도 시각화 차트 렌더링</li>
+                <li>• 대용량 결제 데이터 엄밀한 교차 조인</li>
+              </ul>
+            </div>
+            <div class="pt-2.5 border-t border-blue-100 text-[11px] text-blue-800 font-bold">
+              추천: 매출 이상치 탐색, 등급별 통계 분석
+            </div>
+          </div>
+
+          <div class="border-2 border-amber-100 bg-amber-50/20 p-4 rounded-xl flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-bold text-amber-800 text-sm">Claude</span>
+                <span class="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold">텍스트 특화</span>
+              </div>
+              <h4 class="text-xs font-bold text-neutral-900 mb-2">비정형 텍스트 & 정교한 뉘앙스</h4>
+              <ul class="text-xs text-neutral-600 space-y-1.5">
+                <li>• 수백 건의 장문 고객 VOC 맥락 파악</li>
+                <li>• 임원 보고용 정제된 비즈니스 톤앤매너</li>
+                <li>• 감정 표현과 핵심 불만 원인 분리</li>
+              </ul>
+            </div>
+            <div class="pt-2.5 border-t border-amber-100 text-[11px] text-amber-800 font-bold">
+              추천: 고객 클레임 분석, 1-Page 기획안 작성
+            </div>
+          </div>
+        </div>
+
+        <div class="p-2.5 bg-neutral-100 rounded-lg text-xs text-neutral-600 flex items-center justify-between">
+          <span>💡 오늘 워크숍에서는 <b>Gemini</b>와 <b>ChatGPT</b>를 주력으로 활용하여 데이터 분석과 웹앱 제작을 완수합니다.</span>
+          <span class="font-bold text-neutral-800">Next: 동일 질문 블라인드 비교 실습</span>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 11: 호스피탈리티 AX 글로벌 사례 -->
+    <div class="slide" id="slide-11">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-hotel"></i> INDUSTRY BENCHMARK</span>
+          <h2 class="slide-title">글로벌 프리미엄 호텔/리조트의 AI 도입 트렌드</h2>
+        </div>
+        <span class="badge-time">글로벌 AX 사례</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="border border-neutral-200 bg-white p-4 rounded-xl">
+            <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">다이닝 수요 예측</span>
+            <h4 class="font-bold text-sm text-neutral-900 mt-2 mb-1">F&B 식자재 및 웨이팅 최적화</h4>
+            <p class="text-xs text-neutral-600 leading-relaxed mb-3">
+              메리어트/하얏트는 투숙객 국적과 예약 시간 데이터를 기반으로 조식 뷔페 혼잡도를 사전 분산하고 식자재 폐기율을 28% 절감.
+            </p>
+            <div class="text-[11px] text-neutral-500 border-t pt-2">시사점: 주말 조식 대기열 분산에 즉시 적용 가능</div>
+          </div>
+
+          <div class="border border-neutral-200 bg-white p-4 rounded-xl">
+            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">고객 맞춤형 큐레이션</span>
+            <h4 class="font-bold text-sm text-neutral-900 mt-2 mb-1">초개인화 인룸(In-room) 경험</h4>
+            <p class="text-xs text-neutral-600 leading-relaxed mb-3">
+              포시즌스는 회원 소비 이력을 AI로 분석하여 체크인 전 선호 베개, 웰컴 티, 맞춤형 웰니스 스케줄을 사전 세팅.
+            </p>
+            <div class="text-[11px] text-neutral-500 border-t pt-2">시사점: 아난티 VIP 등급 전용 맞춤 서비스로 확장</div>
+          </div>
+
+          <div class="border border-neutral-200 bg-white p-4 rounded-xl">
+            <span class="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded">현장 운영 자동화</span>
+            <h4 class="font-bold text-sm text-neutral-900 mt-2 mb-1">단일 파일 운영 대시보드 구축</h4>
+            <p class="text-xs text-neutral-600 leading-relaxed mb-3">
+              아만(Aman) 리조트는 지배인들이 코딩 없이 AI 바이브코딩으로 업장별 가동률과 클레임 현황을 한 화면으로 모니터링.
+            </p>
+            <div class="text-[11px] text-neutral-500 border-t pt-2">시사점: 오늘 Module 5에서 여러분이 직접 제작할 결과물</div>
+          </div>
+        </div>
+
+        <div class="p-2.5 bg-neutral-900 text-neutral-300 rounded-xl text-xs text-center">
+          "기술 자체가 아니라, <b>현장의 문제점을 얼마나 명확히 짚어내는가</b>가 AI 도입 성패를 가릅니다."
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 12: [실습 1-1] 동일 질문 블라인드 비교 프롬프트 -->
+    <div class="slide" id="slide-12">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-flask"></i> HANDS-ON 01-1 · TOOL TEST</span>
+          <h2 class="slide-title">[실습 1-1] 주중 F&B 활성화: 3대 도구 동일 질문 입력</h2>
+        </div>
+        <span class="badge-time">실습 미션</span>
+      </div>
+      <div class="slide-body">
+        <p class="text-xs text-neutral-600">
+          아래 프롬프트를 <b>ChatGPT</b>와 <b>Gemini</b>에 각각 동일하게 복사·붙여넣기하여 실행하고 답변의 차이를 확인하세요.
+        </p>
+
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [실습 1-1] 호스피탈리티 F&B 활성화 표준 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-1-1')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-1-1" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">[역할] 너는 럭셔리 리조트 '아난티'의 F&B 및 고객경험 혁신 컨설턴트야.
+[상황] 주말 대비 화·수·목 주중 레스토랑(라포레 뷔페, 맥퀸즈 라운지)의 가동률과 객단가가 40% 이상 저조한 상태야.
+[과제]
+1. 주중 비회원 및 투숙객의 F&B 이용을 유인할 수 있는 즉시 실행 가능한 프로모션 아이디어 3가지를 제안해줘.
+2. 각 아이디어별로 현장 지배인이 성과를 추적할 수 있는 핵심 지표(KPI) 2가지를 정의해줘.
+3. 실행 시 예상되는 현장 운영 리스크(식음 원가, 직원 피로도 등)와 방지 대책을 함께 제시해줘.</pre>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mt-1 text-xs">
+          <div class="bg-neutral-50 p-3 rounded-lg border border-neutral-200">
+            <b class="text-neutral-900 block mb-1">관전 포인트 A (ChatGPT)</b>
+            <span class="text-neutral-600">수치적 논리 구조와 KPI 산식의 정밀성 점검</span>
+          </div>
+          <div class="bg-neutral-50 p-3 rounded-lg border border-neutral-200">
+            <b class="text-neutral-900 block mb-1">관전 포인트 B (Gemini)</b>
+            <span class="text-neutral-600">최근 시장 사례 연계성과 고객 여정 관점의 창의적 아이디어 점검</span>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 13: [실습 1-2] 도구별 답변 해부 & 비교 대조 -->
+    <div class="slide" id="slide-13">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-code-compare"></i> HANDS-ON 01-2 · DEEP DIVE</span>
+          <h2 class="slide-title">[실습 1-2] 두 도구의 답변 해부: 논리성 vs 실행성 대조</h2>
+        </div>
+        <span class="badge-time">결과 분석</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-2 gap-5">
+          <div class="border border-blue-200 bg-blue-50/20 p-4 rounded-xl text-xs space-y-2">
+            <span class="font-bold text-blue-900 text-sm block">ChatGPT의 답변 특징</span>
+            <div class="space-y-1.5 text-neutral-700">
+              <p>• <b>구조화:</b> 1단계-2단계-3단계 실행 절차를 매우 논리적으로 쪼갬.</p>
+              <p>• <b>KPI 산식:</b> '주중 객단가 = 주중 총매출 / 주중 결제건수' 등 산식이 명확함.</p>
+              <p>• <b>단점:</b> 아난티 고유의 프리미엄 톤앤매너보다는 일반적인 호텔 프로모션 느낌이 강할 수 있음.</p>
+            </div>
+          </div>
+
+          <div class="border border-emerald-200 bg-emerald-50/20 p-4 rounded-xl text-xs space-y-2">
+            <span class="font-bold text-emerald-900 text-sm block">Gemini의 답변 특징</span>
+            <div class="space-y-1.5 text-neutral-700">
+              <p>• <b>맥락성:</b> 최근 럭셔리 리조트 트렌드(웰니스, 로컬 미식 등)를 빠르게 버무림.</p>
+              <p>• <b>창의성:</b> 테라스 선셋 요가 패키지 등 고객 경험 차별화 아이디어 제시.</p>
+              <p>• <b>단점:</b> 운영 리스크 수치 계산에서 약간 두루뭉술한 서술이 나타날 수 있음.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3 bg-neutral-900 text-white rounded-xl text-xs flex items-center justify-between">
+          <span class="text-[#c59b6d] font-bold">💡 실무 팁:</span>
+          <span>아이디어 발산과 트렌드 조사는 <b>Gemini</b>, 정밀한 수치 계산과 데이터 분석은 <b>ChatGPT</b>를 연결할 때 시너지가 극대화됩니다.</span>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 14: [비대면 클리닉 1] 줌 투표 & 소통 (수강생 관점 개편) -->
+    <div class="slide" id="slide-14">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-comments"></i> LIVE CLINIC 01</span>
+          <h2 class="slide-title">[비대면 클리닉 1] 10초 투표: 내 마음에 든 도구는?</h2>
+        </div>
+        <span class="badge-time">채팅 참여 미션</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-12 gap-5">
+          <div class="col-span-7 space-y-3">
+            <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl">
+              <h4 class="font-bold text-amber-900 text-sm mb-2">Zoom 채팅창 10초 참여 미션</h4>
+              <p class="text-xs text-amber-950 leading-relaxed">
+                지금 Zoom 채팅창에 간단히 숫자로 남겨주세요:<br>
+                <b>1번: ChatGPT</b> (논리적 구조화와 정밀한 산식이 마음에 들었다)<br>
+                <b>2번: Gemini</b> (창의적인 트렌드 아이디어와 빠른 제안이 마음에 들었다)<br>
+                <span class="text-neutral-500 mt-1 block">※ 번호 뒤에 마음에 든 이유 단어 1개(예: "1번 산식", "2번 아이디어")를 붙여주셔도 좋습니다!</span>
+              </p>
+            </div>
+
+            <div class="border border-neutral-200 p-3.5 rounded-xl bg-white text-xs space-y-1.5">
+              <b class="text-neutral-800 block">수강생 스스로 확인해볼 체크포인트</b>
+              <p class="text-neutral-600"><i class="fa-solid fa-check text-emerald-600 mr-1.5"></i> 역할(Persona)을 부여했을 때 답변의 디테일이 어떻게 달라졌는가?</p>
+              <p class="text-neutral-600"><i class="fa-solid fa-check text-emerald-600 mr-1.5"></i> 제시된 KPI가 우리 현장에서 실제로 측정 가능한 지표인가?</p>
+            </div>
+          </div>
+
+          <div class="col-span-5 bg-neutral-900 text-white p-4 rounded-xl flex flex-col justify-between">
+            <div>
+              <span class="text-xs font-bold text-[#c59b6d] uppercase block mb-1">KEY TAKEAWAY</span>
+              <h4 class="text-base font-bold text-white mb-2">"좋은 질문이 좋은 도구를 만듭니다"</h4>
+              <p class="text-xs text-neutral-300 leading-relaxed">
+                도구 선택을 마쳤다면, 이제 가장 중요한 관문인 **'사내 보안 기준'**을 통과해야 합니다. 아무리 좋은 도구라도 고객 정보가 새어나가면 안 됩니다.
+              </p>
+            </div>
+            <div class="pt-2.5 border-t border-neutral-800 text-[11px] text-[#c59b6d] font-bold">
+              Next: Module 02. AI 데이터 보안 3단계 판정 기준
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 15: Module 2 오프닝 -->
+    <div class="slide" id="slide-15">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-shield-halved"></i> MODULE 02 · DATA SECURITY</span>
+          <h2 class="slide-title">보안 사고는 출력이 아니라 입력에서 터진다</h2>
+        </div>
+        <span class="badge-time">보안 거버넌스</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-12 gap-5 items-center">
+          <div class="col-span-7 space-y-3">
+            <h3 class="text-base font-bold text-neutral-900">"AI에 엑셀을 업로드하기 전, 반드시 거쳐야 할 3초 멈춤의 기술"</h3>
+            <p class="text-xs text-neutral-600 leading-relaxed">
+              사내 분석을 위해 무심코 고객 연락처나 임직원 정보가 포함된 엑셀을 업로드하는 순간, 돌이킬 수 없는 보안 사고가 발생합니다.
+              오늘 실습을 통해 아난티 임직원 전원이 지켜야 할 <b>신호등 3단계 데이터 판정 기준</b>을 체화합니다.
+            </p>
+            <div class="p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-950 font-medium">
+              ⚠️ 실습 파일은 가상으로 만든 데이터입니다. 실제 업무 파일은 업로드 전에 사내 승인 도구·계정과 반출 가능 여부를 확인하고, 식별정보를 로컬에서 제거해야 합니다.
+            </div>
+          </div>
+
+          <div class="col-span-5 bg-neutral-900 p-4 rounded-xl text-white space-y-2">
+            <span class="text-xs font-bold text-[#c59b6d] block">GOLDEN RULE</span>
+            <h4 class="text-base font-bold text-[#e6cbaf]">"이 데이터가 이메일로 경쟁사에 잘못 전송되어도 괜찮은가?"</h4>
+            <p class="text-xs text-neutral-300 leading-relaxed">
+              공개 정보는 🟢, 내부 데이터는 사내 기준에 따라 로컬에서 가명처리 후 재판정 🟡, 식별정보·영업비밀은 🔴입니다.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 16: 데이터 학습 배제 (Opt-out) 설정법 -->
+    <div class="slide" id="slide-16">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-user-lock"></i> PRIVACY SETTINGS</span>
+          <h2 class="slide-title">AI 데이터 보호: 계정 설정과 업로드 승인 확인</h2>
+        </div>
+        <span class="badge-time">보안 필수 세팅</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-2 gap-5">
+          <div class="border border-neutral-200 p-4 rounded-xl bg-white space-y-2">
+            <span class="text-xs font-bold text-neutral-900 flex items-center gap-1.5">
+              <i class="fa-solid fa-gear text-neutral-600"></i> ChatGPT 학습 제외 설정 (Opt-Out)
+            </span>
+            <ol class="text-xs text-neutral-600 space-y-1.5 list-decimal pl-4">
+              <li>현재 로그인한 계정이 개인용인지 사내 승인 업무용인지 확인</li>
+              <li>개인용은 [설정] → [데이터 제어]에서 <b>모두를 위한 모델 개선</b> 사용 여부 확인</li>
+              <li>임시 채팅도 보관·안전 처리 정책이 적용되므로 업로드 승인 수단으로 간주하지 않기</li>
+            </ol>
+            <div class="text-[11px] text-emerald-700 bg-emerald-50 p-2 rounded">
+              업무용 계정의 학습 제외 기본값과 별개로 사내 업로드 허용 범위를 확인하세요.
+            </div>
+          </div>
+
+          <div class="border border-neutral-200 p-4 rounded-xl bg-white space-y-2">
+            <span class="text-xs font-bold text-neutral-900 flex items-center gap-1.5">
+              <i class="fa-brands fa-google text-blue-600"></i> Google Gemini 활동 저장 비활성화
+            </span>
+            <ol class="text-xs text-neutral-600 space-y-1.5 list-decimal pl-4">
+              <li>현재 로그인한 계정과 조직의 Gemini 사용 승인 여부 확인</li>
+              <li>개인용 Gemini는 [활동 저장] 설정과 임시 채팅의 데이터 처리 안내 확인</li>
+              <li>Workspace 보호 정책은 계정·서비스·관리자 설정에 따라 확인</li>
+            </ol>
+            <div class="text-[11px] text-blue-700 bg-blue-50 p-2 rounded">
+              개인 계정의 설정 변경만으로 사내 파일 업로드가 허용되지는 않습니다.
+            </div>
+          </div>
+        </div>
+
+        <div class="p-2.5 bg-neutral-100 rounded-lg text-xs text-neutral-700 text-center font-medium">
+          ※ 업로드 전 순서: <b>① 사내 승인 도구·계정 확인 → ② 데이터 반출 가능 여부 확인 → ③ 로컬에서 식별정보 제거 → ④ 필요한 내용만 업로드</b>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 17: 아난티 3단계 신호등 매트릭스 -->
+    <div class="slide" id="slide-17">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-traffic-light"></i> SECURITY MATRIX</span>
+          <h2 class="slide-title">아난티 데이터 입력 3단계 신호등 판정 기준</h2>
+        </div>
+        <span class="badge-time">판정 기준표</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="border-2 border-emerald-200 bg-emerald-50/40 p-4 rounded-xl">
+            <div class="flex items-center gap-2 text-emerald-800 font-bold text-sm mb-2">
+              <i class="fa-solid fa-circle-check text-emerald-600"></i> 🟢 즉시 입력 가능
+            </div>
+            <p class="text-xs text-neutral-600 mb-2.5">사내외에 이미 공개되었거나 유출 위험이 없는 범용 정보</p>
+            <ul class="text-xs text-neutral-700 space-y-1 font-medium">
+              <li>• 객실 타입 코드 및 정가표</li>
+              <li>• F&B 업장명, 메뉴명, 판매단가</li>
+              <li>• 익명화된 만족도 점수 집계표</li>
+              <li>• 홈페이지 공개 보도자료 및 이벤트</li>
+            </ul>
+          </div>
+
+          <div class="border-2 border-amber-200 bg-amber-50/40 p-4 rounded-xl">
+            <div class="flex items-center gap-2 text-amber-800 font-bold text-sm mb-2">
+              <i class="fa-solid fa-triangle-exclamation text-amber-600"></i> 🟡 로컬 가명처리 후 재판정
+            </div>
+            <p class="text-xs text-neutral-600 mb-2.5">업로드 전에 로컬에서 처리하고 사내 승인 기준으로 재확인</p>
+            <ul class="text-xs text-neutral-700 space-y-1 font-medium">
+              <li>• 고객번호 (난수 ID로 치환: AN_001)</li>
+              <li>• 생년월일 ('30대', '40대' 연령대화)</li>
+              <li>• 영수증 번호 (해시화)</li>
+              <li>• 고객 리뷰 원문 (이름/직원명 블라인드)</li>
+            </ul>
+          </div>
+
+          <div class="border-2 border-rose-200 bg-rose-50/40 p-4 rounded-xl">
+            <div class="flex items-center gap-2 text-rose-800 font-bold text-sm mb-2">
+              <i class="fa-solid fa-circle-xmark text-rose-600"></i> 🔴 절대 입력 금지
+            </div>
+            <p class="text-xs text-neutral-600 mb-2.5">개인정보보호법 및 영업비밀 위반 고위험 데이터</p>
+            <ul class="text-xs text-neutral-700 space-y-1 font-medium">
+              <li>• 고객 실명, 주민번호, 휴대폰 번호</li>
+              <li>• 신용카드 번호, 유효기간, 계좌번호</li>
+              <li>• 사내 미공개 원가, 영업이익률, 계약서</li>
+              <li>• 임직원 인사평가, 연봉 내역</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="p-2.5 bg-neutral-900 text-neutral-300 rounded-lg text-xs text-center">
+          "오늘 실습의 1원칙: <b>실제 노란색(🟡) 데이터는 AI에 올리기 전에 로컬에서 가명처리하고, 재식별 위험과 사내 반출 기준을 다시 확인한다!</b>"
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 18: 실무 퀴즈: 이 데이터 넣어도 될까요? (인터랙티브 클릭 정답 공개) -->
+    <div class="slide" id="slide-18">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-circle-question"></i> INTERACTIVE QUIZ</span>
+          <h2 class="slide-title">실무 퀴즈: "이 데이터, AI 창에 넣어도 될까요?" (클릭하여 정답 확인)</h2>
+        </div>
+        <span class="badge-time">클릭형 퀴즈</span>
+      </div>
+      <div class="slide-body">
+        <p class="text-xs text-neutral-600">
+          각 카드를 <b>마우스로 클릭</b>하면 판정 결과와 이유가 나타납니다. 먼저 머릿속으로 생각해 보세요!
+        </p>
+
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <!-- Quiz 1 -->
+          <div class="quiz-card" onclick="toggleQuizAnswer(this)">
+            <div class="flex items-center justify-between">
+              <span class="font-medium text-neutral-800">1. 아난티 홈페이지에 공개된 라포레 주말 디너 가격표</span>
+              <span class="quiz-prompt-text text-neutral-400 font-bold"><i class="fa-regular fa-hand-pointer"></i> 클릭</span>
+              <span class="quiz-answer font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">🟢 가능 (공개 정보)</span>
+            </div>
+          </div>
+
+          <!-- Quiz 2 -->
+          <div class="quiz-card" onclick="toggleQuizAnswer(this)">
+            <div class="flex items-center justify-between">
+              <span class="font-medium text-neutral-800">2. 고객 성명과 010 전화번호가 포함된 VIP 예약 명단 엑셀</span>
+              <span class="quiz-prompt-text text-neutral-400 font-bold"><i class="fa-regular fa-hand-pointer"></i> 클릭</span>
+              <span class="quiz-answer font-bold text-rose-700 bg-rose-100 px-2 py-0.5 rounded">🔴 금지 (개인 식별정보)</span>
+            </div>
+          </div>
+
+          <!-- Quiz 3 -->
+          <div class="quiz-card" onclick="toggleQuizAnswer(this)">
+            <div class="flex items-center justify-between">
+              <span class="font-medium text-neutral-800">3. 이름/전화번호를 지우고 고객ID만 남긴 100건의 마스터</span>
+              <span class="quiz-prompt-text text-neutral-400 font-bold"><i class="fa-regular fa-hand-pointer"></i> 클릭</span>
+              <span class="quiz-answer font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded">🟡 재식별 위험·승인 기준 확인</span>
+            </div>
+          </div>
+
+          <!-- Quiz 4 -->
+          <div class="quiz-card" onclick="toggleQuizAnswer(this)">
+            <div class="flex items-center justify-between">
+              <span class="font-medium text-neutral-800">4. 호텔 식음 원가 분석을 위한 미공개 식재료 매입원가표</span>
+              <span class="quiz-prompt-text text-neutral-400 font-bold"><i class="fa-regular fa-hand-pointer"></i> 클릭</span>
+              <span class="quiz-answer font-bold text-rose-700 bg-rose-100 px-2 py-0.5 rounded">🔴 금지 (핵심 영업비밀)</span>
+            </div>
+          </div>
+
+          <!-- Quiz 5 -->
+          <div class="quiz-card" onclick="toggleQuizAnswer(this)">
+            <div class="flex items-center justify-between">
+              <span class="font-medium text-neutral-800">5. "OO 지배인이 불친절했다"는 실명이 적힌 고객 불만 VOC</span>
+              <span class="quiz-prompt-text text-neutral-400 font-bold"><i class="fa-regular fa-hand-pointer"></i> 클릭</span>
+              <span class="quiz-answer font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded">🟡 로컬 블라인드 후 재판정</span>
+            </div>
+          </div>
+
+          <!-- Quiz 6 -->
+          <div class="quiz-card" onclick="toggleQuizAnswer(this)">
+            <div class="flex items-center justify-between">
+              <span class="font-medium text-neutral-800">6. 분기별 고객 만족도 설문 평균 점수(5점 만점에 4.2점) 통계</span>
+              <span class="quiz-prompt-text text-neutral-400 font-bold"><i class="fa-regular fa-hand-pointer"></i> 클릭</span>
+              <span class="quiz-answer font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">🟢 가능 (익명 집계 통계)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 text-blue-900 p-2.5 rounded-lg text-xs flex items-center justify-between">
+          <span><b>핵심 기준:</b> 식별정보·영업비밀 외에도 결합에 따른 재식별 위험, 사내 반출 규정, 도구·계정 승인 여부를 확인해야 합니다.</span>
+          <div class="flex items-center gap-2">
+            <button onclick="revealAllQuizzes()" class="font-bold text-blue-700 hover:underline bg-white px-2 py-0.5 rounded border border-blue-300">전체 정답 보기</button>
+            <button onclick="resetAllQuizzes()" class="font-bold text-neutral-700 hover:text-neutral-900 bg-white px-2.5 py-0.5 rounded border border-neutral-300 hover:bg-neutral-100 transition flex items-center gap-1.5 shadow-2xs">
+              <i class="fa-solid fa-rotate-left text-[11px] text-neutral-500"></i> 정답 리셋
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 19: 데이터 정제의 법칙 (GIGO) -->
+    <div class="slide" id="slide-19">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-filter"></i> DATA QUALITY · GIGO</span>
+          <h2 class="slide-title">데이터 정제의 법칙: 입력이 흐리면 분석도 흐려진다</h2>
+        </div>
+        <span class="badge-time">실습 전 점검</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-3 gap-4 text-xs">
+          <div class="border border-neutral-200 bg-neutral-50 p-4 rounded-xl">
+            <h4 class="font-bold text-neutral-900 mb-2">① 업로드 적합성</h4>
+            <p class="text-neutral-600">실제 업무 파일은 승인 도구·계정과 반출 기준을 확인하고, 식별정보를 로컬에서 제거합니다.</p>
+          </div>
+          <div class="border border-neutral-200 bg-neutral-50 p-4 rounded-xl">
+            <h4 class="font-bold text-neutral-900 mb-2">② 데이터 무결성</h4>
+            <p class="text-neutral-600">결측값, 음수 환불, 날짜 형식, 중복 고객번호를 분리해 확인합니다.</p>
+          </div>
+          <div class="border border-neutral-200 bg-neutral-50 p-4 rounded-xl">
+            <h4 class="font-bold text-neutral-900 mb-2">③ 결과 검증</h4>
+            <p class="text-neutral-600">분석의 분모, 제외 건수, 결합되지 않은 행을 함께 보고합니다.</p>
+          </div>
+        </div>
+        <div class="p-3 bg-neutral-900 text-[#e6cbaf] rounded-lg text-center text-sm font-bold">
+          오늘 사용하는 세 파일은 교육용 샘플입니다. 실제 업무에서는 정제와 승인 절차를 먼저 적용하세요.
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 20: [실습 2-1] 기초정보 DB 마스킹 대상 식별 -->
+    <div class="slide" id="slide-20">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-magnifying-glass"></i> HANDS-ON 02-1 · IDENTIFICATION</span>
+          <h2 class="slide-title">[실습 2-1] 기초정보 DB의 개인정보 위험 컬럼 진단</h2>
+        </div>
+        <span class="badge-time">실습 미션</span>
+      </div>
+      <div class="slide-body">
+        <p class="text-xs text-neutral-600">
+          제공된 가상 데이터 `1. 기초정보 DB(sample).xlsx`의 컬럼명을 로컬에서 확인합니다. 이 단계에서는 파일을 업로드하지 않고 컬럼명만으로 위험도를 진단합니다.
+        </p>
+
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [실습 2-1] 개인정보 위험 컬럼 진단 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-2-1')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-2-1" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">파일은 첨부하지 않았어. 가상 고객 DB의 컬럼명은 [고객번호, 고객명, 성별, 생년월일, 휴대폰번호, 이메일, 회원등급, 가입일자, 거주지역, 마케팅수신동의]야.
+1. 원본 값을 보지 않고도 업로드 전에 제거하거나 범주화해야 할 컬럼을 구분해줘.
+2. 고객번호·거주지역 등 다른 정보와 결합하면 재식별될 수 있는 컬럼도 표시해줘.
+3. 실제 업무 파일은 사내 승인 도구·반출 기준 확인과 로컬 비식별 처리 후에만 사용할 수 있음을 안내해줘.</pre>
+        </div>
+
+        <div class="border border-neutral-200 bg-white p-3 rounded-xl text-xs">
+          <span class="font-bold text-neutral-800 block mb-1">예상되는 AI의 분류 결과:</span>
+          <div class="grid grid-cols-3 gap-2 text-neutral-600">
+            <div><b>• 삭제 대상:</b> [고객명], [휴대폰번호], [이메일]</div>
+            <div><b>• 변환 대상:</b> [생년월일] → 연령대('40대') 변환</div>
+            <div><b>• 재검토 대상:</b> [고객번호], [거주지역]은 재식별 가능성 확인 후 처리</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 21: [실습 2-2] 기초정보 DB 가명화 & 마스킹 프롬프트 -->
+    <div class="slide" id="slide-21">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-user-shield"></i> HANDS-ON 02-2 · MASKING</span>
+          <h2 class="slide-title">[실습 2-2] 가상 고객 데이터 마스킹 절차 점검</h2>
+        </div>
+        <span class="badge-time">실습 미션</span>
+      </div>
+      <div class="slide-body">
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [실습 2-2] 개인정보 가명화 & 연령대 파생 컬럼 생성 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-2-2')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-2-2" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">이 파일은 교육용 가상 데이터야. 첨부된 [1. 기초정보 DB(sample).xlsx]의 가명 정제 절차를 실습해줘. 실제 업무 파일은 AI 업로드 전에 로컬에서 처리하고 사내 승인 기준을 확인해야 해.
+1. [고객명], [휴대폰번호], [이메일] 컬럼은 완전히 삭제해줘.
+2. [생년월일] 컬럼은 출생 연도만 추출해서 '30대', '40대', '50대 이상' 형태의 [연령대] 파생 컬럼으로 변환해줘.
+3. [고객번호], [성별], [연령대], [회원등급], [가입일자], [거주지역], [마케팅수신동의] 컬럼을 남기되 고객번호와 거주지역의 재식별 위험을 검토해줘.
+4. 마스킹 전/후 컬럼 대조표를 출력하고, 상위 5개 행을 테이블 형태로 미리보기 해줘.
+5. 정제 완료된 결과를 [정제_기초정보DB.csv]로 다운로드할 수 있게 제공해줘.</pre>
+        </div>
+
+        <div class="border border-neutral-200 bg-white p-3 rounded-xl">
+              <h4 class="text-xs font-bold text-neutral-800 mb-1.5">교육용 가상 데이터의 정제 결과 예시</h4>
+          <table class="w-full text-[11px] text-left border-collapse">
+            <thead>
+              <tr class="bg-neutral-100 text-neutral-700">
+                <th class="p-1.5 border">고객번호</th>
+                <th class="p-1.5 border text-rose-500 line-through">고객명 (삭제)</th>
+                <th class="p-1.5 border">성별</th>
+                <th class="p-1.5 border font-bold text-blue-700">연령대 (변환)</th>
+                <th class="p-1.5 border font-bold text-[#936a44]">회원등급</th>
+                <th class="p-1.5 border">거주지역</th>
+              </tr>
+            </thead>
+            <tbody class="text-neutral-600">
+              <tr>
+                <td class="p-1.5 border font-mono">AN_CUST_0001</td>
+                <td class="p-1.5 border text-neutral-400">---</td>
+                <td class="p-1.5 border">여</td>
+                <td class="p-1.5 border font-bold text-blue-700">40대</td>
+                <td class="p-1.5 border font-bold text-amber-700">무브(Gold)</td>
+                <td class="p-1.5 border">부산 해운대구</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 22: [실습 2-3] 오프라인 결제 데이터 결측·환불 정제 -->
+    <div class="slide" id="slide-22">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-broom"></i> HANDS-ON 02-3 · POS CLEANING</span>
+          <h2 class="slide-title">[실습 2-3] 오프라인 결제 원장 무결성 검증 및 전처리</h2>
+        </div>
+        <span class="badge-time">실습 미션</span>
+      </div>
+      <div class="slide-body">
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [실습 2-3] POS 결제 데이터 무결성 정제 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-2-3')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-2-3" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">첨부된 [3. 오프라인 DB(sample).xlsx] 데이터를 매출 분석에 적합하도록 전처리해줘.
+1. [결제금액]이 빈값(Null)이거나 0원 이하(음수 환불건)인 행이 몇 건인지 확인하고, 정상 결제·환불·결측 데이터를 분리해줘.
+2. [결제일시] 포맷이 '2026-07-24 12:41:00', '2026/05/27 13:13'처럼 혼재되어 있어. 모두 'YYYY-MM-DD HH:MM:SS' 표준으로 통일해줘.
+3. 분석 편의를 위해 '결제요일(월~일)'과 '시간대(조식/중식/석식/야간)' 파생 컬럼 2개를 추가해줘.
+4. 전처리 완료 후: 전체 건수, 정상 결제 건수, 환불 건수, 결측 건수, 총 순매출액을 요약 표로 제시하고, 정제된 정상 결제 데이터를 [정제_오프라인DB.csv]로 제공해줘.</pre>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mt-1 text-xs">
+          <div class="bg-neutral-50 p-3 rounded-lg border border-neutral-200">
+            <span class="font-bold text-neutral-800 block mb-1">발견해야 할 데이터 결함:</span>
+            <p class="text-neutral-600">• 음수 결제 금액 3건 (환불 건으로 분리 집계 필요)<br>• 결제금액 누락 행 2건 (제외 처리)</p>
+          </div>
+          <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
+            <span class="font-bold text-emerald-900 block mb-1">정제 성공 지표:</span>
+            <p class="text-emerald-800">• 순매출과 취소율이 명확히 구분되고 요일/시간대별 그룹핑이 가능한 상태</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 23: [비대면 클리닉 2] 패들렛 1열 인증 & 수강생 체크리스트 -->
+    <div class="slide" id="slide-23">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-chalkboard-user"></i> LIVE CLINIC 02</span>
+          <h2 class="slide-title">[비대면 클리닉 2] 패들렛 1열 인증 & 10초 보안 체크</h2>
+        </div>
+        <span class="badge-time">패들렛 인증</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-12 gap-5">
+          <div class="col-span-7 space-y-3">
+            <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl">
+              <h4 class="font-bold text-amber-900 text-sm mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-camera"></i> 미션: 패들렛 [1열: 보안 정제 인증]에 캡처 등록
+              </h4>
+              <p class="text-xs text-amber-950 leading-relaxed mb-2">
+                정제된 기초정보 DB의 상위 5개 행 테이블 화면을 패들렛 1열에 가볍게 올려주세요!
+              </p>
+              <a href="https://padlet.com/datathinkinglab/ananti" target="_blank" class="inline-flex items-center gap-1 font-bold text-amber-800 bg-white px-2.5 py-1 rounded border border-amber-300 hover:bg-amber-100 transition text-xs">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> 패들렛 1열 바로가기 (padlet.com/datathinkinglab/ananti)
+              </a>
+            </div>
+
+            <div class="border border-neutral-200 p-3 rounded-xl bg-white space-y-1.5 text-xs">
+              <span class="font-bold text-neutral-800 block">수강생 셀프 체크리스트</span>
+              <p class="text-neutral-600"><i class="fa-solid fa-check text-emerald-600 mr-1.5"></i> 고객명과 휴대폰 번호가 완전히 지워졌는가?</p>
+              <p class="text-neutral-600"><i class="fa-solid fa-check text-emerald-600 mr-1.5"></i> 연령대 파생 컬럼이 정상적으로 생성되었는가?</p>
+            </div>
+          </div>
+
+          <div class="col-span-5 bg-neutral-900 text-white p-4 rounded-xl flex flex-col justify-between">
+            <div>
+              <span class="text-xs font-bold text-[#c59b6d] uppercase block mb-1">MILESTONE PASSED</span>
+              <h4 class="text-base font-bold text-white mb-2">산출물 ① 보안 룰북 체화 완료!</h4>
+              <p class="text-xs text-neutral-300 leading-relaxed">
+                교육용 데이터 정제를 마쳤습니다. 실제 업무 데이터는 사내 승인과 재식별 위험 점검을 거친 뒤 분석에 사용하세요.
+              </p>
+            </div>
+            <div class="pt-2.5 border-t border-neutral-800 text-[11px] text-[#c59b6d] font-bold">
+              Next: Module 03. 5대 패턴 기반 데이터 심층 교차 분석
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 24: Module 3 오프닝 -->
+    <div class="slide" id="slide-24">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-sitemap"></i> MODULE 03 · CROSS ANALYSIS</span>
+          <h2 class="slide-title">숫자만 모으지 말고, 질문을 던져라: 데이터 씽킹의 시작</h2>
+        </div>
+        <span class="badge-time">대화형 분석</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-12 gap-5 items-center">
+          <div class="col-span-7 space-y-3">
+            <h3 class="text-base font-bold text-neutral-900">"엑셀 수식을 몰라도 됩니다. 비즈니스 맥락을 지시하는 법을 배웁니다."</h3>
+            <p class="text-xs text-neutral-600 leading-relaxed">
+              과거에는 VLOOKUP, INDEX/MATCH, 다중 피벗 테이블을 다루는 사람만이 데이터를 분석할 수 있었습니다.
+              이제는 자연어로 <b>"누가, 언제, 어디서, 왜 돈을 썼는가?"</b>를 물어보면 AI가 알아서 데이터를 교차 조인하여 해답을 찾아냅니다.
+            </p>
+            <div class="p-3 bg-neutral-100 rounded-lg text-xs space-y-1">
+              <p><b>• 핵심 전환:</b> 엑셀 함수 암기 → 비즈니스 질문 설계 (5-Pattern)</p>
+              <p><b>• 성패 기준:</b> "AI가 출력한 표를 보고 내일 당장 실행할 과제가 나오는가?"</p>
+            </div>
+          </div>
+
+          <div class="col-span-5 bg-neutral-900 p-4 rounded-xl text-white space-y-2">
+            <span class="text-xs font-bold text-[#c59b6d] block">DATA THINKING</span>
+            <h4 class="text-sm font-bold text-[#e6cbaf]">데이터 분석 3단계 진화</h4>
+            <div class="space-y-1.5 text-xs text-neutral-300">
+              <p>1단계: <b>What</b> (매출이 얼마인가? - 단순 집계)</p>
+              <p>2단계: <b>Why</b> (주중에 왜 급감했는가? - 원인 탐색)</p>
+              <p>3단계: <b>Action</b> (누구를 타깃으로 무엇을 팔 것인가? - 실행)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 25: 질문 5대 프레임워크 -->
+    <div class="slide" id="slide-25">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-list-ol"></i> 5-PATTERN FRAMEWORK</span>
+          <h2 class="slide-title">데이터 분석 질문 5대 프레임워크 (5-Pattern)</h2>
+        </div>
+        <span class="badge-time">분석 질문 공식</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-5 gap-3">
+          <div class="border border-neutral-200 bg-white p-3.5 rounded-xl text-center">
+            <span class="w-7 h-7 rounded-full bg-neutral-100 text-neutral-800 font-bold text-xs inline-flex items-center justify-center mb-2">1</span>
+            <h4 class="font-bold text-sm text-neutral-900 mb-1">요약 (Summary)</h4>
+            <p class="text-xs text-neutral-500">총 매출액, 전체 건수, 회원 결제 비중 등 큰 그림 개요</p>
+          </div>
+          <div class="border border-neutral-200 bg-white p-3.5 rounded-xl text-center">
+            <span class="w-7 h-7 rounded-full bg-neutral-100 text-neutral-800 font-bold text-xs inline-flex items-center justify-center mb-2">2</span>
+            <h4 class="font-bold text-sm text-neutral-900 mb-1">추세 (Trend)</h4>
+            <p class="text-xs text-neutral-500">월별·요일별·시간대별 피크타임 및 흐름 추적</p>
+          </div>
+          <div class="border border-neutral-200 bg-white p-3.5 rounded-xl text-center">
+            <span class="w-7 h-7 rounded-full bg-neutral-100 text-neutral-800 font-bold text-xs inline-flex items-center justify-center mb-2">3</span>
+            <h4 class="font-bold text-sm text-neutral-900 mb-1">비교 (Compare)</h4>
+            <p class="text-xs text-neutral-500">회원 등급별 vs 업장별 1회 평균 객단가 편차</p>
+          </div>
+          <div class="border border-neutral-200 bg-white p-3.5 rounded-xl text-center">
+            <span class="w-7 h-7 rounded-full bg-neutral-100 text-neutral-800 font-bold text-xs inline-flex items-center justify-center mb-2">4</span>
+            <h4 class="font-bold text-sm text-neutral-900 mb-1">이상치 (Anomaly)</h4>
+            <p class="text-xs text-neutral-500">주중 가동률 저조 및 취소율 급증 취약 업장 포착</p>
+          </div>
+          <div class="border border-neutral-200 bg-white p-3.5 rounded-xl text-center">
+            <span class="w-7 h-7 rounded-full bg-[#fbf9f6] text-[#936a44] font-bold text-xs inline-flex items-center justify-center mb-2">5</span>
+            <h4 class="font-bold text-sm text-[#936a44] mb-1">시사점 (Action)</h4>
+            <p class="text-xs text-neutral-500">현장 지배인이 즉시 시도할 개선 가설 및 액션 도출</p>
+          </div>
+        </div>
+
+        <div class="p-2.5 bg-neutral-100 rounded-lg text-xs text-neutral-600 text-center">
+          "오늘 실습은 1번(요약)에서 출발하여 5번(실행 과제)까지 단계적으로 파고듭니다."
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 26: PTCO 프롬프트 구조화 -->
+    <div class="slide" id="slide-26">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-layer-group"></i> PTCO FRAMEWORK</span>
+          <h2 class="slide-title">근거와 계산 기준을 명확히 하는 PTCO 프롬프트</h2>
+        </div>
+        <span class="badge-time">프롬프트 조립 공식</span>
+      </div>
+      <div class="slide-body">
+        <p class="text-xs text-neutral-600">
+          AI에 명확한 <b>업무 지시서</b>를 전달하고, 계산 결과와 근거는 별도로 검증하세요.
+        </p>
+
+        <div class="grid grid-cols-4 gap-3 text-xs">
+          <div class="bg-white p-4 rounded-xl border-2 border-neutral-100 shadow-sm">
+            <span class="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">P (Persona)</span>
+            <b class="text-neutral-900 block mt-2 mb-1">역할 정의</b>
+            <p class="text-neutral-600 leading-relaxed">
+              "너는 럭셔리 리조트 아난티의 운영전략 총괄 수석 데이터 분석관이야."
+            </p>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border-2 border-neutral-100 shadow-sm">
+            <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">T (Task)</span>
+            <b class="text-neutral-900 block mt-2 mb-1">핵심 과업</b>
+            <p class="text-neutral-600 leading-relaxed">
+              "회원 등급과 F&B 결제 데이터를 고객번호 기준으로 결합해 분석해."
+            </p>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border-2 border-neutral-100 shadow-sm">
+            <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded">C (Condition)</span>
+            <b class="text-neutral-900 block mt-2 mb-1">제약 조건</b>
+            <p class="text-neutral-600 leading-relaxed">
+              "환불건 제외, 결측치 제거, 회원과 비회원 데이터를 명확히 분리하여 계산해."
+            </p>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border-2 border-neutral-100 shadow-sm">
+            <span class="text-xs font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded">O (Output)</span>
+            <b class="text-neutral-900 block mt-2 mb-1">출력 형식</b>
+            <p class="text-neutral-600 leading-relaxed">
+              "등급별 객단가 비교표(단위: 천원) + 현장 실행 과제 3가지를 불릿으로 요약해."
+            </p>
+          </div>
+        </div>
+
+        <div class="p-3 bg-neutral-900 text-white rounded-xl text-xs flex items-center justify-between">
+          <span><b>핵심 원리:</b> 조건에 분모와 제외 기준을 지정하고, 결과의 건수·계산식·누락 행을 검증합니다.</span>
+          <span class="text-[#c59b6d] font-bold">PTCO 필수 숙지</span>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 27: Bad vs Good 프롬프트 비교 -->
+    <div class="slide" id="slide-27">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-code-compare"></i> PROMPT CLINIC</span>
+          <h2 class="slide-title">Bad vs Good 프롬프트: 왜 결과가 천지차이인가?</h2>
+        </div>
+        <span class="badge-time">프롬프트 대조</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-2 gap-5">
+          <div class="border border-rose-200 bg-rose-50/30 p-4 rounded-xl text-xs space-y-2">
+            <span class="font-bold text-rose-800 text-sm block">❌ 흔히 쓰는 Bad 프롬프트</span>
+            <div class="bg-white p-2.5 rounded border border-rose-200 font-mono text-neutral-700">
+              "우리 회원들이 식당에서 얼마 썼는지 분석해줘."
+            </div>
+            <ul class="text-rose-900 space-y-1 pl-1">
+              <li>• 모호한 기준: '얼마 썼는지'가 총매출인지 1인 객단가인지 불명확</li>
+              <li>• 환각 유발: 비회원 데이터와 환불 음수 금액이 분모에 섞임</li>
+              <li>• 실행 부재: 숫자가 나열된 무의미한 표만 나오고 끝남</li>
+            </ul>
+          </div>
+
+          <div class="border border-emerald-200 bg-emerald-50/30 p-4 rounded-xl text-xs space-y-2">
+            <span class="font-bold text-emerald-800 text-sm block">✅ 교정된 Good 프롬프트 (PTCO)</span>
+            <div class="bg-white p-2.5 rounded border border-emerald-200 font-mono text-neutral-700">
+              "[정제_오프라인DB]에서 환불 제외 정상 결제건만 대상으로, 업장별 1회 평균 객단가와 주중/주말 매출 비중을 집계하고 주중 가동률 개선방안 2가지를 제안해줘."
+            </div>
+            <ul class="text-emerald-900 space-y-1 pl-1">
+              <li>• 명확한 분모: 환불 제외 정상 결제 건 한정</li>
+              <li>• 입체적 비교: 객단가 + 주중/주말 비중 동시 분석</li>
+              <li>• 행동 연결: 현장 개선 아이디어 직결</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="p-2.5 bg-neutral-100 rounded-lg text-xs text-neutral-600 text-center">
+          "질문이 정교할수록, AI의 답변은 보고서 수준으로 올라갑니다."
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 28: [실습 3-1] 패턴 1·2: 매출 요약 및 피크 추적 -->
+    <div class="slide" id="slide-28">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-chart-line"></i> HANDS-ON 03-1 · PATTERN 1 & 2</span>
+          <h2 class="slide-title">[실습 3-1] 요일별·시간대별 매출 피크타임 추적</h2>
+        </div>
+        <span class="badge-time">실습 미션</span>
+      </div>
+      <div class="slide-body">
+        <p class="text-xs text-neutral-600">
+          정제된 <code>3. 오프라인 DB</code>를 대상으로 요일과 시간대별 매출 집중도를 매트릭스로 도출합니다.
+        </p>
+
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [실습 3-1] 매출 요약 및 피크 추적 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-3-1')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-3-1" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">[Persona] 너는 아난티 운영전략팀 수석 분석관이야.
+[Task] 첨부된 오프라인 결제 데이터를 바탕으로 요일별 및 시간대별(조식/중식/석식/야간) 매출 패턴을 분석해줘.
+[Condition] 환불/취소 내역은 제외하고 정상 결제 건만 집계해.
+[Output]
+1. [요일 x 시간대] 총 매출 매트릭스 표 (단위: 천원)
+2. 전체 업장 통틀어 매출과 거래 건수가 가장 집중되는 골든 타임 Top 3
+3. 주말 대비 주중 결제가 가장 심각하게 급감하는 시간대 1곳 지목</pre>
+        </div>
+
+        <div class="bg-neutral-50 p-3 rounded-lg border text-xs text-neutral-700 flex items-center justify-between">
+          <span><b>관찰 포인트:</b> 라포레 뷔페의 주말 조식/중식 시간대에 거래가 극단적으로 쏠리는 현상이 숫자로 증명되는지 확인하세요.</span>
+          <span class="font-bold text-[#936a44]">매트릭스 확인</span>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 29: [실습 3-2] 패턴 3: 업장별 객단가 편차 분석 -->
+    <div class="slide" id="slide-29">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-scale-balanced"></i> HANDS-ON 03-2 · PATTERN 3</span>
+          <h2 class="slide-title">[실습 3-2] 업장별 객단가 및 1회 결제 분포 비교</h2>
+        </div>
+        <span class="badge-time">실습 미션</span>
+      </div>
+      <div class="slide-body">
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [실습 3-2] 업장별 객단가 비교 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-3-2')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-3-2" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">정제된 결제 데이터를 바탕으로 주요 오프라인 업장별 1회 평균 결제금액(객단가)을 비교해줘.
+1. 업장명(라포레, 맥퀸즈 라운지, 베이커리 살롱, 워터하우스, 이터널저니, 오션시티 바)별로:
+   - 총 결제 건수, 총 매출액, 1회 평균 객단가, 건당 최고 결제금액을 표로 정리해줘.
+2. 평균 객단가가 가장 높은 업장과 가장 낮은 업장의 격차 배수를 계산해줘.
+3. 객단가가 높은 상위 2개 업장의 주요 피크 시간대가 언제인지 알려줘.</pre>
+        </div>
+
+        <div class="border border-neutral-200 bg-white p-3 rounded-xl text-xs space-y-1">
+          <b class="text-neutral-800 block">도출 예상 수치:</b>
+          <p class="text-neutral-600">• 라포레(뷔페): 평균 객단가 13~15만 원선 (디너/주말 뷔페 결제 집중)</p>
+          <p class="text-neutral-600">• 베이커리 살롱: 평균 객단가 2~3만 원선 (단품 구매 위주)</p>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 30: [실습 3-3] 패턴 4: 주중 매출 급감 이상 징후 포착 -->
+    <div class="slide" id="slide-30">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-triangle-exclamation"></i> HANDS-ON 03-3 · PATTERN 4</span>
+          <h2 class="slide-title">[실습 3-3] 이상치 탐색: 주중 가동률 저조 업장 규명</h2>
+        </div>
+        <span class="badge-time">이상치 탐색</span>
+      </div>
+      <div class="slide-body">
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [실습 3-3] 주중 결제 급감 이상 징후 분석 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-3-3')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-3-3" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">결제 데이터에서 [주중(화·수·목)]과 [주말(금·토·일)]의 매출 격차가 가장 극단적인 업장을 찾아줘.
+1. 각 업장별로 [주말 대비 주중 일평균 매출 하락율(%)]을 계산하여 내림차순으로 정렬해줘.
+2. 하락율이 40% 이상으로 나타난 취약 업장 1곳을 지목하고, 해당 업장의 주중 시간대별 결제 건수 추이를 분석해줘.
+3. 왜 이 업장의 주중 가동률이 저조한지 현장 운영 관점에서의 가설 2가지를 제시해줘.</pre>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs text-amber-950 flex items-center justify-between">
+          <span><b>인사이트 발견:</b> 맥퀸즈 라운지와 오션시티 바가 주중 14시~17시, 21시 이후 시간대에 극심한 가동률 결함을 보임.</span>
+          <span class="font-bold text-amber-800">이상치 포착 완료</span>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 31: 이종 DB 고객번호 기준 결합 (Join) 원리 -->
+    <div class="slide" id="slide-31">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-network-wired"></i> CROSS-JOIN LOGIC</span>
+          <h2 class="slide-title">VLOOKUP 없이 자연어로 2개 이종 DB 교차 결합</h2>
+        </div>
+        <span class="badge-time">교차 조인 원리</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-12 gap-5 items-center">
+          <div class="col-span-5 bg-neutral-50 p-4 rounded-xl border border-neutral-200 space-y-2 text-xs">
+            <span class="font-bold text-neutral-900 block text-sm">과거의 엑셀 방식:</span>
+            <p class="text-neutral-600 leading-relaxed">
+              기초정보 시트에서 <code>=VLOOKUP(고객번호, ...)</code> 함수를 걸어 수천 행에 복사하고, 참조 오류(#N/A)를 잡느라 고심.
+            </p>
+            <div class="p-2 bg-rose-100/50 text-rose-800 rounded font-mono text-[11px]">
+              #N/A, #REF! 수식 깨짐 빈번 발생
+            </div>
+          </div>
+
+          <div class="col-span-2 flex justify-center text-2xl text-[#c59b6d]">
+            <i class="fa-solid fa-arrow-right"></i>
+          </div>
+
+          <div class="col-span-5 bg-[#171b20] p-4 rounded-xl border border-neutral-700 text-white space-y-2 text-xs">
+            <span class="font-bold text-[#c59b6d] block text-sm">오늘의 생성형 AI 방식:</span>
+            <p class="text-neutral-300 leading-relaxed">
+              "두 파일의 고객번호를 매핑해서, 회원등급별 평균 결제액을 비교해줘"라고 한 줄 쓰면 AI가 내부적으로 파이썬 판다스(Pandas) 조인을 수행.
+            </p>
+            <div class="p-2 bg-emerald-950/60 border border-emerald-700 text-emerald-300 rounded font-mono text-[11px]">
+              고객번호 기준 결합 후 누락·중복 검증
+            </div>
+          </div>
+        </div>
+
+        <div class="p-2.5 bg-neutral-100 rounded-lg text-xs text-neutral-700 text-center font-medium">
+          "두 개의 다른 엑셀 파일을 한 대화창에 동시에 올리고 질문하는 것이 핵심입니다."
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 32: [실습 3-4] 회원등급 x 오프라인 결제 교차 조인 -->
+    <div class="slide" id="slide-32">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-link"></i> HANDS-ON 03-4 · CROSS-JOIN</span>
+          <h2 class="slide-title">[실습 3-4] 회원 등급과 오프라인 결제 내역 교차 결합</h2>
+        </div>
+        <span class="badge-time">실습 미션</span>
+      </div>
+      <div class="slide-body">
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [실습 3-4] 이종 DB 교차 조인 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-3-4')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-3-4" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">제공된 가상 데이터의 [정제_기초정보DB.csv]와 [정제_오프라인DB.csv]를 '고객번호'를 기준으로 결합(Join)해서 교차 분석해줘. 고객번호가 NON_MEMBER인 결제는 비회원으로 분리하고, 결합되지 않은 행 수를 먼저 보고해줘.
+1. 회원등급(아난티 VIP / 무브 Gold / 프렌즈 Silver / 일반회원 / 비회원)별로:
+   - 총 결제금액 및 전체 매출 대비 비중(%)
+   - 1회 방문당 평균 결제금액(객단가)
+   - 결제 건수를 비교하는 대조표를 만들어줘.
+2. 회원 등급이 올라갈수록 객단가가 얼마나 증가하는지 배수로 계산해줘.</pre>
+        </div>
+
+        <div class="border border-neutral-200 bg-white p-3 rounded-xl text-xs flex items-center justify-between">
+          <span class="text-neutral-700"><b>샘플 데이터 확인값:</b> 정상 결제액 기준 VIP 매출 비중은 약 18.1%입니다. 분석 시 분모와 결합 누락 건수를 함께 확인하세요.</span>
+          <span class="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded">교차 성공</span>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 33: [실습 3-5] VIP 고객의 소비 행동 심층 분석 -->
+    <div class="slide" id="slide-33">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-crown"></i> HANDS-ON 03-5 · VIP BEHAVIOR</span>
+          <h2 class="slide-title">[실습 3-5] VIP 회원의 오프라인 선호 업장 & 미이용자 분석</h2>
+        </div>
+        <span class="badge-time">심층 분석</span>
+      </div>
+      <div class="slide-body">
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [실습 3-5] VIP 소비 행동 심층 질의 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-3-5')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-3-5" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">앞선 고객번호 기준 결합 결과를 바탕으로 다음 3가지를 추가 분석해줘.
+1. [아난티 VIP] 등급 회원이 가장 많은 지출을 하는 오프라인 업장 Top 2와 주요 결제 시간대를 도출해줘.
+2. 기초정보 DB에는 등록되어 있지만, 오프라인 결제 원장에서 결제 이력이 0건인 회원의 비율을 회원등급별로 계산해줘.
+3. 오프라인 결제가 없는 VIP 회원을 오프라인 업장으로 유도하기 위한 맞춤형 혜택 1가지를 제안해줘.</pre>
+        </div>
+
+        <div class="bg-neutral-50 p-3 rounded-lg border text-xs text-neutral-700 space-y-1">
+          <b>중요 발견점:</b>
+          <p>• 샘플의 VIP 결제액 상위 2개 업장은 오션시티 바와 워터하우스이며, 두 업장 합계가 VIP 정상 결제액의 약 61.2%입니다.</p>
+          <p>• 등록 회원 100명 중 오프라인 결제 이력이 없는 회원은 2명(2%)입니다. 식음만 따로 집계할 때는 분모와 업장 범위를 다시 명시하세요.</p>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 34: [실습 3-6] 패턴 5: 현장 지배인 보고용 3줄 액션 플랜 -->
+    <div class="slide" id="slide-34">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-clipboard-check"></i> HANDS-ON 03-6 · ACTION PLAN</span>
+          <h2 class="slide-title">[실습 3-6] 데이터에서 판단으로: 현장 3줄 액션 플랜 도출</h2>
+        </div>
+        <span class="badge-time">실행 과제</span>
+      </div>
+      <div class="slide-body">
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [실습 3-6] 현장 지배인 보고 메모 작성 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-3-6')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-3-6" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">지금까지 도출된 교차 분석 수치를 근거로, 현장 총괄 지배인에게 보고할 [주간 운영 개선 실행 메모]를 작성해줘.
+- 형식:
+  [1. 핵심 관찰 (What)]: 데이터에서 발견된 가장 심각한 매출 병목 현상 1가지 (수치 근거 포함)
+  [2. 원인 가설 (Why)]: 고객 행동 및 업장 운영 관점에서의 잠재적 원인 2가지
+  [3. 즉시 실행 과제 (Action)]: 다음 주 월요일부터 현장 팀이 즉시 테스트할 3가지 대책
+     (각 과제별 실행 난이도 상/중/하 및 예상 기대효과 명시)</pre>
+        </div>
+
+        <div class="p-3 bg-neutral-900 text-white rounded-xl text-xs space-y-1">
+          <span class="text-[#c59b6d] font-bold block">💡 인사이트 작성의 공식</span>
+          <p class="text-neutral-300">"주중 14시~17시 맥퀸즈 라운지 매출이 주말 대비 65% 급감했다 (What) → 체크인 대기 고객 대상 연계 혜택이 없다 (Why) → 주중 얼리 체크인 고객 대상 웰컴 드링크 바우처를 발송한다 (Action)"</p>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 35: [클리닉 3-1] 통계 분모 오류 크로스 체크 -->
+    <div class="slide" id="slide-35">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-stethoscope"></i> CLINIC 03-1 · DENOMINATOR CHECK</span>
+          <h2 class="slide-title">[클리닉 3-1] AI 통계의 가장 흔한 함정: 분모(Denominator) 오류</h2>
+        </div>
+        <span class="badge-time">환각 차단</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-2 gap-5">
+          <div class="border border-rose-200 bg-rose-50/40 p-4 rounded-xl text-xs space-y-2">
+            <span class="font-bold text-rose-800 text-sm block">⚠️ 잘못된 분모 계산의 예</span>
+            <p class="text-neutral-700 leading-relaxed">
+              "우리 VIP 회원의 오프라인 식음 이용률은 85%입니다."<br>
+              → 알고 보니 분모가 <b>'전체 회원 100명'</b>이 아니라, <b>'결제에 성공한 40명 중 VIP'</b>만 넣어서 계산된 통계적 착시!
+            </p>
+            <div class="p-2 bg-white rounded border border-rose-200 text-rose-900">
+              실제 전체 VIP 회원 중 방문자는 50% 미만인데도 착시로 인해 과대평가됨.
+            </div>
+          </div>
+
+          <div class="border border-emerald-200 bg-emerald-50/40 p-4 rounded-xl text-xs space-y-2">
+            <span class="font-bold text-emerald-800 text-sm block">✅ 셀프 검증 체크리스트</span>
+            <div class="space-y-1.5 text-neutral-700">
+              <p>• 비율(%)을 계산할 때 <b>'전체 분모'</b>가 무엇인지 AI 답변에서 확인했는가?</p>
+              <p>• 비회원(NON_MEMBER) 결제 건이 회원 통계에 섞이지 않았는가?</p>
+              <p>• 환불 건수가 분모에서 정상 차감되었는가?</p>
+            </div>
+            <div class="p-2 bg-white rounded border border-emerald-200 text-emerald-900 font-bold">
+              "AI에게 항상 '분모가 무엇인지 명시해서 계산해줘'라고 지시하세요."
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 36: [클리닉 3-2] 줌 채팅 라이브 프롬프트 소통 (수강생 관점 개편) -->
+    <div class="slide" id="slide-36">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-chalkboard-user"></i> LIVE CLINIC 03-2</span>
+          <h2 class="slide-title">[비대면 클리닉 3-2] 채팅창 발견 공유 & 산출물 ② 확정</h2>
+        </div>
+        <span class="badge-time">발견 공유</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-12 gap-5">
+          <div class="col-span-7 space-y-3">
+            <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl">
+              <h4 class="font-bold text-amber-900 text-sm mb-2">Zoom 채팅창 1문장 공유 미션</h4>
+              <p class="text-xs text-amber-950 leading-relaxed">
+                본인이 작성한 실행 메모 중 <b>[1. 핵심 관찰 (What)]</b> 한 문장만 Zoom 채팅창에 가볍게 복사해 주세요.
+                <br>(예: <i>"맥퀸즈 라운지 주중 14~17시 결제건수가 주말 대비 65% 급감함"</i>)
+              </p>
+            </div>
+
+            <div class="border border-neutral-200 p-3 rounded-xl bg-white text-xs space-y-1">
+              <span class="font-bold text-neutral-800 block">수강생 문장 다듬기 팁:</span>
+              <p class="text-neutral-500 line-through">"맥퀸즈 라운지 주중 매출이 안 나옵니다." (모호함)</p>
+              <p class="text-emerald-700 font-bold">→ "맥퀸즈 라운지의 주중 14~17시 결제건수는 주말 대비 65% 급감하여 시간당 평균 매출이 4만 원에 불과합니다." (숫자 근거)</p>
+            </div>
+          </div>
+
+          <div class="col-span-5 bg-neutral-900 text-white p-4 rounded-xl flex flex-col justify-between">
+            <div>
+              <span class="text-xs font-bold text-[#c59b6d] uppercase block mb-1">MILESTONE PASSED</span>
+              <h4 class="text-base font-bold text-white mb-2">산출물 ② 교차 리포트 완성!</h4>
+              <p class="text-xs text-neutral-300 leading-relaxed">
+                숫자가 말해주는 현상을 파악했습니다. 그렇다면 고객들은 왜 주중에 오지 않고, 주말 조식에는 왜 대기가 폭발할까요? 고객의 진짜 목소리(VOC)를 들으러 갑니다.
+              </p>
+            </div>
+            <div class="pt-2.5 border-t border-neutral-800 text-[11px] text-[#c59b6d] font-bold">
+              Next: Module 04. VOC 텍스트 마이닝과 시장 트렌드 융합
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 37: Module 4 오프닝 -->
+    <div class="slide" id="slide-37">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-comments"></i> MODULE 04 · VOC & TRENDS</span>
+          <h2 class="slide-title">숫자가 말해주지 않는 진짜 이유: 고객의 소리(VOC)에 있다</h2>
+        </div>
+        <span class="badge-time">정성 데이터 마이닝</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-12 gap-5 items-center">
+          <div class="col-span-7 space-y-3">
+            <h3 class="text-base font-bold text-neutral-900">"정량 데이터는 '현상'을 보여주고, 정성 VOC는 '원인과 감정'을 알려줍니다."</h3>
+            <p class="text-xs text-neutral-600 leading-relaxed">
+              오프라인 결제 원장에서 라포레 뷔페의 주말 매출이 폭발한 것을 보았지만, 그것이 고객의 '만족'을 의미하지는 않습니다.
+              수백 건의 고객 불만 글과 리뷰 원문을 AI로 구조화하여, 진짜 병목과 해결의 열쇠를 찾아냅니다.
+            </p>
+            <div class="p-3 bg-neutral-100 rounded-lg text-xs space-y-1">
+              <p><b>• 내부 진단:</b> 120건의 VOC를 4대 영역으로 분류하고 불만 원인 Top 3 추출</p>
+              <p><b>• 외부 트렌드:</b> 2026 프리미엄 여가/웰니스 트렌드를 AI로 팩트 리서치</p>
+              <p><b>• 기회 창출:</b> 내부 문제점 + 외부 트렌드 = 차별화 서비스 1-Page 기획안</p>
+            </div>
+          </div>
+
+          <div class="col-span-5 bg-neutral-900 p-4 rounded-xl text-white space-y-2">
+            <span class="text-xs font-bold text-[#c59b6d] block">CX FORMULA</span>
+            <h4 class="text-base font-bold text-[#e6cbaf]">1-Page 기획 공식</h4>
+            <div class="p-3 bg-neutral-800/80 rounded border border-neutral-700 text-xs text-neutral-300">
+              [내부 페인포인트: 조식 뷔페 40분 대기 불만]<br>
+              +<br>
+              [시장 트렌드: 웰니스 인룸 다이닝 & 모바일 오더]<br>
+              =<br>
+              <b class="text-[#c59b6d]">[아난티 프라이빗 모닝 웰니스 패키지]</b>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 38: 비정형 텍스트 마이닝 원리 -->
+    <div class="slide" id="slide-38">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-brain"></i> TEXT MINING LOGIC</span>
+          <h2 class="slide-title">비정형 고객 리뷰 텍스트 마이닝 3단계 원리</h2>
+        </div>
+        <span class="badge-time">분석 기법</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="border border-neutral-200 bg-white p-4 rounded-xl text-xs space-y-2">
+            <span class="font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">STEP 01</span>
+            <h4 class="font-bold text-sm text-neutral-900">도메인 카테고리 태깅</h4>
+            <p class="text-neutral-600 leading-relaxed">
+              뒤섞인 리뷰 글을 [식음/F&B], [객실], [예약/멤버십], [부대시설/레저] 등 샘플의 업무 영역으로 자동 라벨링.
+            </p>
+          </div>
+
+          <div class="border border-neutral-200 bg-white p-4 rounded-xl text-xs space-y-2">
+            <span class="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">STEP 02</span>
+            <h4 class="font-bold text-sm text-neutral-900">감성(Sentiment) 분석</h4>
+            <p class="text-neutral-600 leading-relaxed">
+              단순 평점(1~5점)이 아닌, 텍스트의 뉘앙스를 분석하여 [긍정], [중립], [부정/불만]으로 판별하고 부서별 불만 비율 집계.
+            </p>
+          </div>
+
+          <div class="border border-neutral-200 bg-white p-4 rounded-xl text-xs space-y-2">
+            <span class="font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded">STEP 03</span>
+            <h4 class="font-bold text-sm text-neutral-900">페인포인트 클러스터링</h4>
+            <p class="text-neutral-600 leading-relaxed">
+              "화가 났다", "별로다" 같은 감정 표현을 걷어내고 '대기시간', '청결', '응대 태도', '온도' 등 진짜 원인 키워드를 그룹핑.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-2.5 bg-neutral-900 text-white rounded-xl text-xs flex items-center justify-between">
+          <span>💡 수작업으로 3일 걸리던 수백 건의 리뷰 분류를 AI를 통해 30초 만에 완수합니다.</span>
+          <span class="text-[#c59b6d] font-bold">Next: 실습 4-1 감성 태깅</span>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 39: [실습 4-1] 아난티 VOC 120건 4대 영역 자동 분류 -->
+    <div class="slide" id="slide-39">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-tags"></i> HANDS-ON 04-1 · CLASSIFICATION</span>
+          <h2 class="slide-title">[실습 4-1] 고객 VOC 샘플 120건 4대 영역 자동 분류</h2>
+        </div>
+        <span class="badge-time">실습 미션</span>
+      </div>
+      <div class="slide-body">
+        <p class="text-xs text-neutral-600">
+          제공된 가상 데이터 `아난티_고객_VOC_샘플.csv`로 영역별 분류를 실습합니다. 실제 고객 VOC는 업로드 전에 로컬에서 개인정보를 점검하고 사내 승인 기준을 확인합니다.
+        </p>
+
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [실습 4-1] VOC 영역 분류 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-4-1')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-4-1" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">첨부된 [아난티_고객_VOC_샘플.csv] 데이터를 분석해줘.
+1. 파일의 [이용영역] 값인 [식음/F&B], [객실], [예약/멤버십], [부대시설/레저] 4개 카테고리를 먼저 확인하고, 리뷰 원문과 불일치하는 행이 있는지 검토해줘.
+2. 카테고리별 전체 접수 건수와 비중(%)을 표로 정리해줘.
+3. 리뷰 원문에 고객 성명이나 휴대폰 번호 등 식별정보가 있는지 확인해줘. 발견되지 않으면 '탐지 0건'으로 보고하고 예시를 만들어내지 마.</pre>
+        </div>
+
+        <div class="bg-neutral-50 p-3 rounded-lg border text-xs text-neutral-600 flex items-center justify-between">
+          <span><b>검증 확인:</b> 제공된 CSV에서 실제 탐지 건수를 확인하세요. 가상 개인정보 예시는 별도 자료로 실습하고, 원본 고객 VOC에 대해서는 업로드 전 로컬 점검을 적용합니다.</span>
+          <span class="font-bold text-emerald-700">보안 유지</span>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 40: [실습 4-2] 감성 태깅 & 불만 원인 Top 3 도출 -->
+    <div class="slide" id="slide-40">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-heart-crack"></i> HANDS-ON 04-2 · SENTIMENT</span>
+          <h2 class="slide-title">[실습 4-2] 감성 태깅 및 불만 집중 영역 Top 3 도출</h2>
+        </div>
+        <span class="badge-time">감성 분석</span>
+      </div>
+      <div class="slide-body">
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [실습 4-2] 감성 분석 및 불만 키워드 도출 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-4-2')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-4-2" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">분류된 VOC 리뷰들의 감성(Sentiment)을 분석해줘.
+1. 각 리뷰를 [긍정], [중립], [부정/불만]으로 판정하고, 4개 영역별 부정 리뷰 비율(%)을 계산해줘.
+2. 부정 리뷰 비율이 가장 높은 카테고리 1순위와 2순위를 지목해줘.
+3. 부정 리뷰에서 고객들이 가장 빈번하게 고통을 호소한 [핵심 불만 키워드 Top 3]와, 그 불만을 가장 적나라하게 보여주는 실제 리뷰 원문 1개씩을 발췌해줘.</pre>
+        </div>
+
+        <div class="border border-neutral-200 bg-white p-3 rounded-xl text-xs space-y-1">
+          <b class="text-neutral-800 block">도출되는 핵심 페인포인트:</b>
+          <p class="text-neutral-600">1. <b>조식 대기 불만:</b> 샘플 리뷰에 40분 대기를 호소하는 사례가 있습니다. 전체 평균 대기시간으로 해석하지 마세요.</p>
+          <p class="text-neutral-600">2. <b>예약·체크인 불편:</b> 실제 불만 리뷰 수와 원문을 확인한 뒤 우선순위를 정하세요.</p>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 41: 핵심 불만 발견: 조식 대기 40분의 파급효과 -->
+    <div class="slide" id="slide-41">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-bell-concierge"></i> ROOT CAUSE ANALYSIS</span>
+          <h2 class="slide-title">조식 대기 불만: 검증할 운영 가설과 기획 기회</h2>
+        </div>
+        <span class="badge-time">문제 정의</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-12 gap-5">
+          <div class="col-span-7 space-y-2.5 text-xs">
+            <h3 class="text-sm font-bold text-neutral-900">정량 데이터와 정성 VOC가 만나는 지점</h3>
+            <div class="p-3 bg-rose-50 border border-rose-200 rounded-lg space-y-1 text-rose-950">
+              <b>• 오프라인 POS 결제 데이터:</b> 라포레의 요일·시간대별 정상 결제액과 건수를 직접 집계해 집중도를 검증
+              <br><b>• 고객 VOC 리뷰 데이터:</b> 조식 대기 관련 리뷰 건수와 식음 부정 리뷰 대비 비중을 직접 계산
+            </div>
+            <p class="text-neutral-600 leading-relaxed">
+              샘플 VOC에는 40분 대기를 호소하는 리뷰가 있지만, 평균 대기시간이나 매출 영향은 별도 측정이 필요합니다.
+              <b>"실제 혼잡이 확인된다면 수요를 객실이나 프라이빗 다이닝으로 분산할 수 있을까?"</b>를 기획 가설로 삼습니다.
+            </p>
+          </div>
+
+          <div class="col-span-5 bg-neutral-900 p-4 rounded-xl text-white flex flex-col justify-between text-xs">
+            <div>
+              <span class="text-xs font-bold text-[#c59b6d] block mb-1">STRATEGIC QUESTION</span>
+              <h4 class="text-sm font-bold text-[#e6cbaf] mb-2">"불만을 줄이면서 객단가를 높일 수 있는가?"</h4>
+              <p class="text-neutral-300 leading-relaxed">
+                단순히 대기를 줄이는 것을 넘어, VIP 고객이 기꺼이 추가 비용을 지불하게 만드는 프리미엄 서비스로 전환할 수 있습니다.
+              </p>
+            </div>
+            <span class="text-neutral-400 text-[11px] pt-2 border-t border-neutral-800">Next: 외부 여가 트렌드 AI 팩트 리서치</span>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 42: [실습 4-3] 최신 웰니스 & 호스피탈리티 트렌드 리서치 -->
+    <div class="slide" id="slide-42">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-globe"></i> HANDS-ON 04-3 · TREND RESEARCH</span>
+          <h2 class="slide-title">[실습 4-3] 최신 호스피탈리티 & 웰니스 트렌드 AI 팩트 리서치</h2>
+        </div>
+        <span class="badge-time">트렌드 리서치</span>
+      </div>
+      <div class="slide-body">
+        <p class="text-xs text-neutral-600">
+          환각(Hallucination) 없이 글로벌 리조트들의 검증된 해결 방식을 리서치합니다.
+        </p>
+
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [실습 4-3] 트렌드 팩트 리서치 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-4-3')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-4-3" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">최근 1~2년간 글로벌 럭셔리 리조트 및 특급 호텔에서 도입한 [식음(F&B) 혼잡도 분산 및 인룸 다이닝(In-room Dining) 혁신 사례] 3가지를 조사해줘.
+- 특히 '프라이빗 웰니스 모닝 바스켓', '객실 테라스 조식 딜리버리', '모바일 사전 오더' 관련 실제 사례 위주로 정리해줘.
+- 각 사례별로 고객 반응과 호텔의 수익성(객단가 제고) 효과를 함께 서술해줘.
+- 출처나 근거가 불명확한 추측성 내용은 제외하고 신뢰도 높은 트렌드 정보만 제시해줘.</pre>
+        </div>
+
+        <div class="border border-neutral-200 bg-white p-3 rounded-xl text-xs flex items-center justify-between">
+          <span class="text-neutral-700"><b>조사된 트렌드 키워드:</b> #인룸웰니스바스켓 #모바일타임슬롯예약 #테라스프라이빗다이닝</span>
+          <span class="text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded">리서치 완료</span>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 43: [실습 4-4] 내부 문제 + 외부 트렌드 융합 기획 -->
+    <div class="slide" id="slide-43">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-wand-magic-sparkles"></i> HANDS-ON 04-4 · FUSION</span>
+          <h2 class="slide-title">[실습 4-4] 문제(조식 대기) + 트렌드(인룸 웰니스) 융합 설계</h2>
+        </div>
+        <span class="badge-time">아이디어 구체화</span>
+      </div>
+      <div class="slide-body">
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [실습 4-4] 서비스 아이디어 구체화 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-4-4')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-4-4" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">[관찰] 교육용 VOC 샘플에 조식 대기 40분을 호소하는 리뷰가 있어. 평균 대기시간과 불만 1순위 여부는 아직 확인되지 않았어.
+[기획 가설] 객실 내 프라이빗 조식 옵션이 일부 고객의 대기 부담을 줄일 수 있어. 선호도와 수익성은 검증이 필요해.
+[요청] 위 가설을 바탕으로 신규 서비스의 명칭, 핵심 컨셉, VIP 혜택을 3줄로 제안해줘. 혼잡도 30% 감소는 검증할 목표로 표시하고, 측정 지표도 제시해줘.</pre>
+        </div>
+
+        <div class="bg-neutral-50 border p-3 rounded-lg text-xs space-y-1.5">
+          <b class="text-neutral-900 block">AI가 도출한 서비스 초안 예시:</b>
+          <p class="text-neutral-700">• <b>서비스명:</b> 아난티 '모닝 오아시스 바스켓 (Morning Oasis Basket)'</p>
+          <p class="text-neutral-700">• <b>컨셉:</b> 뷔페 대기 대신 객실 테라스에서 바다를 보며 즐기는 유기농 착즙 주스 + 베이커리 살롱 수제 브런치 딜리버리</p>
+          <p class="text-neutral-700">• <b>VIP 혜택:</b> 아난티 VIP 회원 대상 모바일 앱 사전 무료 업그레이드 선택권 부여</p>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 44: [실습 4-5] 임원 보고용 1-Page CX 혁신 기획안 완성 -->
+    <div class="slide" id="slide-44">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-file-signature"></i> HANDS-ON 04-5 · 1-PAGE PROPOSAL</span>
+          <h2 class="slide-title">[실습 4-5] 1-Page CX 서비스 기획안 완성</h2>
+        </div>
+        <span class="badge-time">기획안 완성</span>
+      </div>
+      <div class="slide-body">
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [실습 4-5] 1-Page 완성 기획안 작성 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-4-5')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-4-5" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">앞선 논의를 종합하여 아난티 경영진에게 보고할 [고객경험(CX) 혁신 및 F&B 가동률 제고를 위한 1-Page 기획안]을 작성해줘.
+
+[필수 포함 항목]
+1. 추진 배경: VOC 분석 불만 수치(조식 대기 40분) 및 오프라인 결제 편중 데이터 근거
+2. 서비스 개요 및 운영 방식: (타깃 고객, 서비스 명칭, 제공 메뉴 구성)
+3. VIP 회원 우대 및 멤버십 혜택: 아난티 VIP / 무브 Gold 고객 차별화 혜택
+4. 정량적 기대 효과:
+   - 라포레 주말 조식 뷔페 대기시간 35% 단축
+   - F&B 객단가 15% 제고 및 룸서비스 매출 25% 신장 목표치 제시</pre>
+        </div>
+
+        <div class="p-2.5 bg-neutral-100 rounded-lg text-xs text-neutral-600 flex items-center justify-between">
+          <span><b>산출물 확정:</b> 기획안이 생성되면 전문을 복사하여 패들렛 [2열: CX 기획안]에 등록할 준비를 합니다.</span>
+          <span class="font-bold text-[#936a44]">산출물 ③ 완성</span>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 45: [클리닉 4] 패들렛 2열 갤러리 워크 & 동료 투표 (수강생 관점 개편) -->
+    <div class="slide" id="slide-45">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-users-viewfinder"></i> LIVE CLINIC 04</span>
+          <h2 class="slide-title">[비대면 클리닉 4] 패들렛 갤러리 워크 & 동료 응원 투표</h2>
+        </div>
+        <span class="badge-time">동료 투표</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-12 gap-5">
+          <div class="col-span-7 space-y-3">
+            <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl">
+              <h4 class="font-bold text-amber-900 text-sm mb-2">패들렛 2열 가벼운 미션</h4>
+              <p class="text-xs text-amber-950 leading-relaxed mb-2">
+                1. 작성한 1-Page 기획안을 패들렛 <b>[2열: CX 기획안]</b>에 카드로 붙여넣으세요.<br>
+                2. 동료들의 기획안을 둘러보고 마음에 드는 아이디어에 <b>'좋아요(❤️)'</b>를 꾹 눌러주세요.<br>
+                3. 마음에 드는 카드 1곳에 <b>'응원 한마디'</b>를 남겨주세요!
+              </p>
+              <a href="https://padlet.com/datathinkinglab/ananti" target="_blank" class="inline-flex items-center gap-1 font-bold text-amber-800 bg-white px-2.5 py-1 rounded border border-amber-300 hover:bg-amber-100 transition text-xs">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> 패들렛 2열 바로가기
+              </a>
+            </div>
+
+            <div class="border border-neutral-200 p-3 rounded-xl bg-white text-xs">
+              <span class="font-bold text-neutral-800 block mb-1">수강생 동료 피드백 포인트:</span>
+              <p class="text-neutral-600">• "내가 고객이라면 이 서비스를 이용하고 싶을까?"</p>
+              <p class="text-neutral-600">• "아난티만의 고급스러운 무드가 잘 드러나 있는가?"</p>
+            </div>
+          </div>
+
+          <div class="col-span-5 bg-neutral-900 text-white p-4 rounded-xl flex flex-col justify-between">
+            <div>
+              <span class="text-xs font-bold text-[#c59b6d] uppercase block mb-1">MILESTONE PASSED</span>
+              <h4 class="text-base font-bold text-white mb-2">산출물 ③ 기획안 완성!</h4>
+              <p class="text-xs text-neutral-300 leading-relaxed">
+                데이터 분석과 기획안이 문서로 끝난다면 과거와 다를 바 없습니다. 이제 이 모든 지표와 기획을 내 PC 브라우저에서 바로 동작하는 **'살아있는 도구'**로 만듭니다.
+              </p>
+            </div>
+            <div class="pt-2.5 border-t border-neutral-800 text-[11px] text-[#c59b6d] font-bold">
+              Next: Module 05. 바이브코딩 대시보드 웹앱 제작
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 46: Module 5 오프닝 -->
+    <div class="slide" id="slide-46">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-laptop-code"></i> MODULE 05 · VIBE CODING</span>
+          <h2 class="slide-title">바이브코딩: 코딩을 몰라도 내 업무 도구를 직접 만든다</h2>
+        </div>
+        <span class="badge-time">업무 도구화</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-12 gap-5 items-center">
+          <div class="col-span-7 space-y-3">
+            <h3 class="text-base font-bold text-neutral-900">"문법을 외우는 코딩의 시대는 끝났습니다. 요구사항을 정의하는 시대입니다."</h3>
+            <p class="text-xs text-neutral-600 leading-relaxed">
+              바이브코딩(Vibe Coding)이란 복잡한 프로그래밍 언어를 배우지 않고, 내가 원하는 화면 구조, 지표, 인터랙션을 자연어로 설명하여 소프트웨어를 완성하는 새로운 패러다임입니다.
+            </p>
+            <div class="space-y-1.5 text-xs text-neutral-700">
+              <p><b>1. 무설치·단일 파일:</b> <code>.html</code> 파일 하나에 디자인과 기능이 모두 포함됨</p>
+              <p><b>2. 브라우저 더블클릭:</b> 더블클릭만 하면 크롬/엣지에서 0.5초 만에 실행</p>
+              <p><b>3. 로컬 실행의 장점:</b> 데이터 처리가 외부 서비스로 전송되지 않는지 코드와 연결 기능을 확인한 뒤 사용</p>
+            </div>
+          </div>
+
+          <div class="col-span-5 bg-neutral-900 p-4 rounded-xl text-white space-y-2">
+            <span class="text-xs font-bold text-[#c59b6d] block">VIBE CODING</span>
+            <h4 class="text-sm font-bold text-[#e6cbaf]">오늘 여러분이 만들 결과물</h4>
+            <div class="p-3 bg-neutral-800 rounded border border-neutral-700 text-xs text-neutral-300 space-y-1">
+              <p>• 상단: 핵심 KPI 카드 4종</p>
+              <p>• 중단: 업장 결제 비중 도넛 차트 + 요일별 매출 바 차트</p>
+              <p>• 하단: 업장별 우선 관리 리스트 테이블</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 47: 웹 화면을 만드는 3가지 요소 -->
+    <div class="slide" id="slide-47">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-cubes"></i> WEB ARCHITECTURE</span>
+          <h2 class="slide-title">실무자가 이해해야 할 웹 화면을 만드는 3가지 요소</h2>
+        </div>
+        <span class="badge-time">웹앱 원리</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="border border-neutral-200 bg-white p-4 rounded-xl text-xs space-y-2">
+            <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">
+              <i class="fa-brands fa-html5"></i>
+            </div>
+            <h4 class="font-bold text-sm text-neutral-900">HTML (구조 & 뼈대)</h4>
+            <p class="text-neutral-600 leading-relaxed">
+              화면에 어떤 정보가 들어갈지 결정하는 뼈대.<br>
+              • 대시보드 타이틀, 카드 박스, 테이블 표, 버튼 등
+            </p>
+          </div>
+
+          <div class="border border-neutral-200 bg-white p-4 rounded-xl text-xs space-y-2">
+            <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-sm">
+              <i class="fa-brands fa-css3-alt"></i>
+            </div>
+            <h4 class="font-bold text-sm text-neutral-900">CSS (스타일 & 디자인)</h4>
+            <p class="text-neutral-600 leading-relaxed">
+              아름답고 읽기 쉽게 만드는 시각 디자인.<br>
+              • 아난티 다크 네이비 배경, 골드 포인트, 둥근 모서리, 여백
+            </p>
+          </div>
+
+          <div class="border border-neutral-200 bg-white p-4 rounded-xl text-xs space-y-2">
+            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">
+              <i class="fa-brands fa-js"></i>
+            </div>
+            <h4 class="font-bold text-sm text-neutral-900">JavaScript (동작 & 차트)</h4>
+            <p class="text-neutral-600 leading-relaxed">
+              사용자의 클릭에 반응하고 차트를 그리는 두뇌.<br>
+              • Chart.js 그래프 렌더링, 필터 버튼 클릭 시 데이터 전환
+            </p>
+          </div>
+        </div>
+
+        <div class="p-2.5 bg-neutral-900 text-white rounded-xl text-xs text-center">
+          "이 세 가지를 각각 파일로 만들 필요 없이, <b>단 하나의 HTML 파일 안에 모두 합쳐서</b> 생성하는 것이 가장 안전합니다."
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 48: 왜 단일 파일 HTML(Single File)인가? -->
+    <div class="slide" id="slide-48">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-file-code"></i> SECURITY & SIMPLICITY</span>
+          <h2 class="slide-title">사내 배포의 혁신: 왜 단일 파일 HTML인가?</h2>
+        </div>
+        <span class="badge-time">보안 최적화</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-2 gap-5">
+          <div class="border border-neutral-200 p-4 rounded-xl bg-neutral-50 text-xs space-y-2">
+            <span class="font-bold text-neutral-900 text-sm block">기존 사내 시스템 개발 방식:</span>
+            <ul class="text-neutral-600 space-y-1.5">
+              <li>• IT 개발팀에 요청 후 외주 발주 (수개월 소요)</li>
+              <li>• 별도 웹 서버 구축 및 데이터베이스 연동 작업 필수</li>
+              <li>• 복잡한 보안 심의 및 유지보수 비용 발생</li>
+            </ul>
+          </div>
+
+          <div class="border border-emerald-200 p-4 rounded-xl bg-emerald-50/30 text-xs space-y-2">
+            <span class="font-bold text-emerald-900 text-sm block">오늘 배울 바이브코딩 방식:</span>
+            <ul class="text-emerald-800 space-y-1.5 font-medium">
+              <li>• AI에게 프롬프트 전달 후 30초 만에 단일 코드 생성</li>
+              <li>• 서버 없이 <b>내 PC 브라우저(크롬/엣지)</b>에서 즉시 실행</li>
+              <li>• 동료에게 메일이나 메신저로 <code>.html</code> 파일만 전달하면 끝!</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="p-2.5 bg-neutral-100 rounded-lg text-xs text-neutral-700 text-center font-bold">
+          "지금 바로 내 손으로 아난티 운영 대시보드를 생성합니다."
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 49: [실습 5-1] 아난티 대시보드 단일 HTML 생성 프롬프트 -->
+    <div class="slide" id="slide-49">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-code"></i> HANDS-ON 05-1 · CODE GENERATION</span>
+          <h2 class="slide-title">[실습 5-1] 아난티 1-Page 대시보드 단일 코드 생성</h2>
+        </div>
+        <span class="badge-time">코드 생성</span>
+      </div>
+      <div class="slide-body">
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [실습 5-1] 1-Page HTML 대시보드 단일 코드 생성 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-5-1')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-5-1" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">앞선 실습에서 분석한 아난티 회원 등급별 소비 데이터와 업장 매출 현황을 시각화하는 [완전한 단일 파일 HTML 대시보드] 코드를 작성해줘.
+- 브라우저 더블클릭으로 즉시 실행되어야 해 (Tailwind CSS CDN + Chart.js CDN 포함).
+- 디자인: 럭셔리 아난티 스타일 (다크 네이비 #121518 배경, 골드 #c59b6d 악센트, Pretendard 폰트).
+- 상단: 'ANANTI Operations Dashboard' 타이틀 + KPI 카드 4종 (총 매출액, VIP 객단가, F&B 비중, 긍정 VOC 비율).
+- 중단: 업장별 결제 비중 도넛 차트 + 요일별 매출 추이 바 차트 (Chart.js 반응형).
+- 하단: 주요 업장별 현황 테이블 (업장명, 구분, 평균 객단가, 주중 가동률, 개선 과제).
+생략(TODO나 코드 생략 주석) 없이 그대로 복사해 쓸 수 있는 완전한 HTML 단일 파일로 출력해줘.</pre>
+        </div>
+
+        <div class="border border-neutral-200 bg-white p-2.5 rounded-lg text-xs flex items-center justify-between">
+          <span class="text-neutral-600"><b>실행 준비:</b> AI가 코드를 출력하기 시작하면, 우측 상단의 [코드 복사] 버튼을 누를 준비를 하세요.</span>
+          <span class="font-bold text-blue-700">출력 대기</span>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 50: [실습 5-2] 코드 저장 및 로컬 실행 테스트 -->
+    <div class="slide" id="slide-50">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-play"></i> HANDS-ON 05-2 · EXECUTION</span>
+          <h2 class="slide-title">[실습 5-2] 3단계 실행: 복사 → 메모장 저장 → 더블클릭</h2>
+        </div>
+        <span class="badge-time">실행 테스트</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-3 gap-4 text-xs">
+          <div class="p-4 bg-neutral-50 border border-neutral-200 rounded-xl space-y-2">
+            <span class="w-6 h-6 rounded-full bg-neutral-800 text-white flex items-center justify-center font-bold text-xs">1</span>
+            <b class="text-neutral-900 block">코드 전체 복사</b>
+            <p class="text-neutral-600 leading-relaxed">
+              AI가 출력한 코드 블록 우측 상단의 <b>[Copy Code]</b> 버튼을 클릭하여 클립보드에 복사합니다.
+            </p>
+          </div>
+
+          <div class="p-4 bg-neutral-50 border border-neutral-200 rounded-xl space-y-2">
+            <span class="w-6 h-6 rounded-full bg-neutral-800 text-white flex items-center justify-center font-bold text-xs">2</span>
+            <b class="text-neutral-900 block">메모장에 붙여넣기</b>
+            <p class="text-neutral-600 leading-relaxed">
+              Windows 메모장(Notepad)을 열고 <code>Ctrl + V</code>로 붙여넣은 뒤, <code>아난티_대시보드.html</code>로 저장합니다.
+              <br><span class="text-rose-600 font-bold">(파일 형식: 모든 파일 / 인코딩: UTF-8)</span>
+            </p>
+          </div>
+
+          <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl space-y-2">
+            <span class="w-6 h-6 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-xs">3</span>
+            <b class="text-emerald-900 block">더블클릭 실행!</b>
+            <p class="text-emerald-800 leading-relaxed">
+              바탕화면에 생성된 <code>아난티_대시보드.html</code> 파일을 마우스로 더블클릭하여 브라우저에서 열리는지 확인합니다.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-2.5 bg-neutral-900 text-white rounded-xl text-xs flex items-center justify-between">
+          <span><b>체크:</b> 화면에 멋진 다크 골드 톤의 대시보드와 차트가 나타난 분은 Zoom 채팅창에 <b>'완료'</b>를 남겨주세요!</span>
+          <span class="text-[#c59b6d] font-bold">실행 성공</span>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 51: [실습 5-3] 대화형 바이브코딩: UI & 인터랙션 수정 -->
+    <div class="slide" id="slide-51">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-wand-magic-sparkles"></i> HANDS-ON 05-3 · REFINEMENT</span>
+          <h2 class="slide-title">[실습 5-3] 대화로 기능 추가하기 (인터랙티브 수정 실습)</h2>
+        </div>
+        <span class="badge-time">기능 업그레이드</span>
+      </div>
+      <div class="slide-body">
+        <p class="text-xs text-neutral-600">
+          "한 번에 완벽한 코드는 없습니다. 마음에 들지 않는 부분을 AI에게 말로 요청하여 고치는 것이 바이브코딩의 진짜 묘미입니다."
+        </p>
+
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [실습 5-3] UI 수정 및 필터 기능 추가 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-5-3')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-5-3" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">작성해준 대시보드 코드에서 다음 2가지를 수정해줘:
+1. KPI 카드에 마우스를 올렸을 때 살짝 위로 떠오르는 부드러운 호버 효과(Hover Transition)를 추가해줘.
+2. 하단 업장 테이블 상단에 업장구분(전체 / F&B / 카페 / 레저)을 필터링할 수 있는 드롭다운 버튼을 자바스크립트로 구현해줘.
+수정된 완전한 전체 HTML 코드를 다시 출력해줘.</pre>
+        </div>
+
+        <div class="border border-neutral-200 bg-white p-2.5 rounded-lg text-xs flex items-center justify-between">
+          <span class="text-neutral-700"><b>반영 확인:</b> 새로 출력된 코드를 다시 메모장에 덮어쓰고 브라우저를 새로고침(F5)하여 호버 효과와 필터 버튼 동작을 확인합니다.</span>
+          <span class="font-bold text-emerald-700">업그레이드 완료</span>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 52: [선택 실습] Option B: 주간 데이터 자동 분석 에이전트 -->
+    <div class="slide" id="slide-52">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-robot"></i> OPTION B · AI AGENT ROUTINE</span>
+          <h2 class="slide-title">[Option B] 반복 업무 자동화 AI 에이전트 시스템 구축</h2>
+        </div>
+        <span class="badge-time">에이전트 트랙</span>
+      </div>
+      <div class="slide-body">
+        <p class="text-xs text-neutral-600">
+          현장 지배인 및 반복 보고 담당자를 위해, 매주 엑셀만 던지면 보고서를 자동 작성하는 에이전트 프롬프트를 세팅합니다.
+        </p>
+
+        <div class="prompt-box">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-[#c59b6d] flex items-center gap-2">
+              <i class="fa-solid fa-copy"></i> [Option B] 주간 운영 분석 에이전트 시스템 프롬프트
+            </span>
+            <button class="copy-btn" onclick="copyPrompt('prompt-5-b')"><i class="fa-regular fa-copy"></i> 복사</button>
+          </div>
+          <pre id="prompt-5-b" class="text-xs text-neutral-200 whitespace-pre-wrap font-sans">너는 [아난티 주간 운영 데이터 자동 분석 에이전트]야.
+내가 매주 월요일 새로운 오프라인 결제 엑셀 파일을 업로드하면 다음 4단계 규칙을 자동 실행해야 해:
+규칙 1: 결제 취소/환불 건을 자동 분리하고 순매출액 및 전주 대비 증감율을 계산한다.
+규칙 2: VIP 회원의 1회 평균 객단가를 추적하고 이상치(10% 이상 하락) 발생 시 붉은색 경고 표시를 한다.
+규칙 3: 가장 매출이 저조한 업장 1곳을 선정해 즉시 실행 가능한 프로모션 아이디어를 제시한다.
+규칙 4: 임원 보고용 5줄 요약 브리핑 메모로 최종 출력한다.
+이 규칙을 기억하고, 준비가 되었으면 '새로운 주간 엑셀을 업로드해주세요'라고 답해줘.</pre>
+        </div>
+
+        <div class="bg-neutral-50 p-2.5 rounded-lg border text-xs text-neutral-600">
+          이 프롬프트를 ChatGPT의 [Custom GPTs] 또는 Gemini의 [Gems]에 등록하면 매주 나만의 AI 비서로 작동합니다.
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 53: [클리닉 5] 비대면 라이브 쇼케이스 (수강생 관점 개편) -->
+    <div class="slide" id="slide-53">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-trophy"></i> FINAL SHOWCASE</span>
+          <h2 class="slide-title">[최종 쇼케이스] 나의 첫 대시보드 시연 & 3대 관점 점검</h2>
+        </div>
+        <span class="badge-time">최종 시연</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="border-2 border-blue-200 bg-blue-50/20 p-4 rounded-xl text-center">
+            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold mx-auto mb-2 text-xs">1</div>
+            <h4 class="font-bold text-sm text-neutral-900 mb-1">사용성 (Usability)</h4>
+            <p class="text-xs text-neutral-600">처음 보는 다른 팀 동료나 임원이 매뉴얼 없이 30초 안에 핵심 수치를 찾을 수 있는가?</p>
+          </div>
+
+          <div class="border-2 border-emerald-200 bg-emerald-50/20 p-4 rounded-xl text-center">
+            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold mx-auto mb-2 text-xs">2</div>
+            <h4 class="font-bold text-sm text-neutral-900 mb-1">업무 적합성 (Utility)</h4>
+            <p class="text-xs text-neutral-600">이 대시보드를 보고 "내일 현장에서 무엇을 개선해야 할지" 구체적인 의사결정이 내려지는가?</p>
+          </div>
+
+          <div class="border-2 border-rose-200 bg-rose-50/20 p-4 rounded-xl text-center">
+            <div class="w-8 h-8 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center font-bold mx-auto mb-2 text-xs">3</div>
+            <h4 class="font-bold text-sm text-neutral-900 mb-1">보안성 (Security)</h4>
+            <p class="text-xs text-neutral-600">고객 실명, 휴대폰 번호, 카드번호 등 식별정보가 단 1건도 코드에 하드코딩되지 않았는가?</p>
+          </div>
+        </div>
+
+        <div class="bg-neutral-900 text-white p-3 rounded-xl flex items-center justify-between text-xs mt-1">
+          <div class="space-y-0.5">
+            <span class="text-[#c59b6d] font-bold">비대면 참여자 화면 공유 쇼케이스 (자율 지원)</span>
+            <p class="text-neutral-400">자신이 완성한 대시보드를 직접 화면 공유하여 1분간 핵심 기능 자랑하기</p>
+          </div>
+          <span class="bg-[#c59b6d] text-neutral-900 px-3 py-1 rounded font-bold">Screen Sharing</span>
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 54: 4대 산출물 최종 점검표 -->
+    <div class="slide" id="slide-54">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-clipboard-check"></i> WRAP-UP</span>
+          <h2 class="slide-title">오늘 완성한 4대 실무 산출물 최종 확인</h2>
+        </div>
+        <span class="badge-time">결과물 확인</span>
+      </div>
+      <div class="slide-body">
+        <div class="grid grid-cols-4 gap-4 text-xs">
+          <div class="p-4 bg-neutral-50 rounded-xl border-2 border-neutral-200 flex flex-col justify-between">
+            <div>
+              <i class="fa-solid fa-circle-check text-emerald-600 text-base mb-2"></i>
+              <b class="text-neutral-900 block text-sm mb-1">1. 보안 룰북 & 가명화</b>
+              <p class="text-neutral-600 leading-relaxed">
+                신호등 3단계 보안 판정 기준과 식별정보 마스킹 템플릿 확립
+              </p>
+            </div>
+            <span class="text-emerald-700 font-bold mt-3">Module 02 통과</span>
+          </div>
+
+          <div class="p-4 bg-neutral-50 rounded-xl border-2 border-neutral-200 flex flex-col justify-between">
+            <div>
+              <i class="fa-solid fa-circle-check text-emerald-600 text-base mb-2"></i>
+              <b class="text-neutral-900 block text-sm mb-1">2. 교차 분석 리포트</b>
+              <p class="text-neutral-600 leading-relaxed">
+                VIP 객단가 1.6배 및 주중 가동률 결함 지점 규명 3줄 메모
+              </p>
+            </div>
+            <span class="text-blue-700 font-bold mt-3">Module 03 통과</span>
+          </div>
+
+          <div class="p-4 bg-neutral-50 rounded-xl border-2 border-neutral-200 flex flex-col justify-between">
+            <div>
+              <i class="fa-solid fa-circle-check text-emerald-600 text-base mb-2"></i>
+              <b class="text-neutral-900 block text-sm mb-1">3. 1-Page CX 기획안</b>
+              <p class="text-neutral-600 leading-relaxed">
+                조식 뷔페 대기 불만을 해소하는 인룸 웰니스 다이닝 제안서
+              </p>
+            </div>
+            <span class="text-purple-700 font-bold mt-3">Module 04 통과</span>
+          </div>
+
+          <div class="p-4 bg-neutral-50 rounded-xl border-2 border-neutral-200 flex flex-col justify-between">
+            <div>
+              <i class="fa-solid fa-circle-check text-emerald-600 text-base mb-2"></i>
+              <b class="text-neutral-900 block text-sm mb-1">4. 1-Page 대시보드</b>
+              <p class="text-neutral-600 leading-relaxed">
+                브라우저 더블클릭 단일 HTML 동적 웹앱 완성 및 필터 동작
+              </p>
+            </div>
+            <span class="text-indigo-700 font-bold mt-3">Module 05 통과</span>
+          </div>
+        </div>
+
+        <div class="p-2.5 bg-neutral-900 text-neutral-200 rounded-xl text-xs text-center">
+          "오늘 만든 것은 가상의 이론이 아니라, 내일부터 여러분의 책상에서 작동할 <b>진짜 업무 도구</b>입니다."
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 55: [실습 6] 내일의 1가지 AI 액션 선언문 -->
+    <div class="slide" id="slide-55">
+      <div class="slide-header">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-flag-checkered"></i> ACTION COMMITMENT</span>
+          <h2 class="slide-title">[실습 6] 내일 출근해서 실행할 나의 AI 액션 1가지 서약</h2>
+        </div>
+        <span class="badge-time">퇴근 미션</span>
+      </div>
+      <div class="slide-body">
+        <div class="border-2 border-dashed border-[#c59b6d] bg-[#fcf9f5] p-5 rounded-2xl text-center space-y-3">
+          <span class="text-xs font-bold text-[#936a44] tracking-wider uppercase">
+            [퇴근 미션] 내일 출근해서 실행할 나의 AI 액션 선언문
+          </span>
+
+          <p class="text-base font-bold text-neutral-900 leading-relaxed max-w-2xl mx-auto">
+            "나는 내일부터 <span class="border-b-2 border-amber-600 text-amber-900 px-2">[ 내 담당 엑셀/보고 업무 ]</span>를 처리할 때,<br>
+            오늘 배운 <span class="border-b-2 border-amber-600 text-amber-900 px-2">[ 보안 마스킹 & PTCO 프롬프트 ]</span> 방식을 적용하여<br>
+            주간 작업 시간을 획기적으로 단축하겠다."
+          </p>
+
+          <p class="text-xs text-neutral-500">
+            ※ 위 빈칸을 본인의 실제 업무 내용으로 채운 완성된 한 문장을 <b>Zoom 채팅창</b>에 남겨주세요!
+          </p>
+        </div>
+
+        <div class="bg-slate-900 text-neutral-300 p-2.5 rounded-xl text-xs text-center">
+          "작게 시작하고, 매주 반복해서 개선하는 것이 실무 AI 활용의 유일한 성공 공식입니다."
+        </div>
+      </div>
+      <div class="slide-footer-bar">
+        <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
+        <span>© 2026 Data Thinking Lab. All rights reserved.</span>
+      </div>
+    </div>
+
+    <!-- Slide 56: 클로징 & Q&A (Dark Luxury Anchor) -->
+    <div class="slide" id="slide-56" style="background: #111417; color: #ffffff; justify-content: center; align-items: center; text-align: center; padding: 60px;">
+      <p class="text-xs font-bold text-[#c59b6d] tracking-[0.25em] uppercase mb-4">
+        THINK WITH DATA, GROW WITH AI
+      </p>
+      <h2 class="text-4xl font-extrabold text-white leading-tight mb-4 tracking-tight">
+        데이터로 생각하고, AI로 실무를 혁신합니다
+      </h2>
+      <p class="text-sm text-neutral-300 max-w-xl leading-relaxed mb-6">
+        오늘 만든 것은 시작일 뿐입니다. 이제 여러분의 현장과 사무실에서 아난티의 일하는 방식을 직접 바꿔 나가세요.
+      </p>
+
+      <div class="w-16 h-1 bg-[#c59b6d] mb-6"></div>
+
+      <div class="flex items-center gap-8 text-xs text-neutral-400">
+        <div><b class="text-white">강사:</b> 이승묵 박사</div>
+        <div><b class="text-white">소속:</b> 데이터씽킹랩 (Data Thinking Lab)</div>
+        <div>
+          <b class="text-white">웹사이트:</b> 
+          <a href="https://www.datathinkinglab.com" target="_blank" class="text-[#c59b6d] hover:underline">www.datathinkinglab.com</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- Bottom Controller -->
+  <!-- ========================================================================= -->
+  <footer id="controller">
+    <div class="flex items-center gap-3 text-xs text-neutral-300">
+      <span class="font-bold text-[#c59b6d]">아난티 AI 실무 과정</span>
+      <span class="text-neutral-600">|</span>
+      <span id="slide-indicator" class="font-mono text-neutral-400">01 / 56</span>
+    </div>
+
+    <div class="w-2/5 bg-neutral-800 h-1.5 rounded-full overflow-hidden">
+      <div id="progress-bar" class="bg-[#c59b6d] h-full transition-all duration-300" style="width: 1.78%;"></div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <!-- PDF Print Button -->
+      <button onclick="printPresentation()" class="text-xs bg-neutral-800 hover:bg-neutral-700 text-amber-300 border border-amber-600/40 px-3 py-1.5 rounded transition flex items-center gap-1.5">
+        <i class="fa-solid fa-file-pdf"></i> PDF 출력
+      </button>
+      <button onclick="toggleOverview()" class="text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-3 py-1.5 rounded transition flex items-center gap-1.5">
+        <i class="fa-solid fa-grip"></i> 목차 (O)
+      </button>
+      <button onclick="prevSlide()" class="text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-3 py-1.5 rounded transition">
+        <i class="fa-solid fa-chevron-left"></i> 이전
+      </button>
+      <button onclick="nextSlide()" class="text-xs bg-[#c59b6d] hover:bg-[#b08759] text-neutral-900 font-bold px-4 py-1.5 rounded transition">
+        다음 <i class="fa-solid fa-chevron-right"></i>
+      </button>
+      <button onclick="toggleFullscreen()" class="text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-2.5 py-1.5 rounded transition">
+        <i class="fa-solid fa-expand"></i>
+      </button>
+    </div>
+  </footer>
+
+  <!-- Overview Modal -->
+  <div id="overview-modal" onclick="toggleOverview()">
+    <div class="bg-[#171a1d] border border-neutral-700 rounded-2xl p-6 max-w-5xl w-full max-h-[85vh] overflow-y-auto" onclick="event.stopPropagation()">
+      <div class="flex justify-between items-center mb-4 pb-3 border-b border-neutral-700 text-white">
+        <h3 class="font-bold text-base flex items-center gap-2 text-[#c59b6d]">
+          <i class="fa-solid fa-list-ol"></i> 슬라이드 전체 목차 (총 56장)
+        </h3>
+        <button onclick="toggleOverview()" class="text-neutral-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i> 닫기</button>
+      </div>
+      <div class="grid grid-cols-4 gap-2.5 text-xs" id="overview-list">
+        <!-- Dynamically generated items -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast">
+    <i class="fa-solid fa-check text-emerald-400"></i>
+    <span id="toast-message">프롬프트가 클립보드에 복사되었습니다!</span>
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 56;
+
+    const titles = [
+      "01. 워크숍 오프닝 (표지)",
+      "02. 강사 소개 (이승묵 박사)",
+      "03. 실무자 페인포인트 진단",
+      "04. 오늘 손에 쥘 4종 산출물",
+      "05. 5단계 역량 완성 여정",
+      "06. 비대면(Zoom) 간편 상호작용",
+      "07. [실습 0-1] 작업 환경 & 패들렛 셋업",
+      "08. [실습 0-2] 3종 데이터셋 구조 확인",
+      "09. M1. 도구 선택 & 실무 비교 개요",
+      "10. 아난티 업무별 3대 도구 매핑",
+      "11. 글로벌 호텔/리조트 AX 트렌드",
+      "12. [실습 1-1] 주중 F&B 활성화 도구별 질의",
+      "13. [실습 1-2] 두 도구의 답변 해부 대조",
+      "14. [클리닉 1] 10초 채팅 투표 소통",
+      "15. M2. AI 보안 3단계 판정 개요",
+      "16. 데이터 유출 방지: Opt-out 설정법",
+      "17. 아난티 3단계 신호등 매트릭스",
+      "18. 실무 퀴즈 (클릭하여 정답 확인)",
+      "19. 데이터 정제의 법칙 (GIGO)",
+      "20. [실습 2-1] 기초정보 DB 위험컬럼 진단",
+      "21. [실습 2-2] 가상 고객 데이터 마스킹 절차",
+      "22. [실습 2-3] 오프라인 결제 결측·환불 정제",
+      "23. [클리닉 2] 패들렛 1열 인증 & 점검",
+      "24. M3. 대화형 데이터 입체 분석 개요",
+      "25. 데이터 분석 질문 5대 프레임워크",
+      "26. 근거와 계산 기준을 명확히 하는 PTCO",
+      "27. Bad vs Good 프롬프트 비교 대조",
+      "28. [실습 3-1] 요일/시간대별 매출 피크 추적",
+      "29. [실습 3-2] 업장별 객단가 편차 분석",
+      "30. [실습 3-3] 주중 매출 급감 이상치 탐색",
+      "31. 이종 DB 자연어 결합(Join) 원리",
+      "32. [실습 3-4] 회원등급 x 결제 교차 조인",
+      "33. [실습 3-5] VIP 고객 소비 행동 심층 분석",
+      "34. [실습 3-6] 현장 지배인 3줄 액션 플랜",
+      "35. [클리닉 3-1] 통계 분모 오류 크로스 체크",
+      "36. [클리닉 3-2] 줌 채팅 발견 공유",
+      "37. M4. VOC 텍스트 마이닝 개요",
+      "38. 비정형 VOC 분석 3단계 원리",
+      "39. [실습 4-1] VOC 120건 4대 영역 자동분류",
+      "40. [실습 4-2] 감성 태깅 & 불만 원인 Top 3",
+      "41. 조식 대기 불만과 검증할 운영 가설",
+      "42. [실습 4-3] 웰니스 트렌드 팩트 리서치",
+      "43. [실습 4-4] 문제 + 트렌드 융합 기획",
+      "44. [실습 4-5] 1-Page CX 서비스 기획안",
+      "45. [클리닉 4] 패들렛 갤러리 워크 & 투표",
+      "46. M5. 바이브코딩 대시보드 웹앱 개요",
+      "47. 웹 화면을 만드는 3가지 요소 (HTML/CSS/JS)",
+      "48. 왜 단일 파일 HTML(Single File)인가?",
+      "49. [실습 5-1] 아난티 대시보드 단일 코드 생성",
+      "50. [실습 5-2] 3단계 실행 (복사-저장-더블클릭)",
+      "51. [실습 5-3] 대화형 바이브코딩 기능 추가",
+      "52. [Option B] 주간 자동분석 AI 에이전트",
+      "53. [클리닉 5] 나의 첫 대시보드 시연",
+      "54. 4대 실무 산출물 최종 확인 점검표",
+      "55. [실습 6] 내일의 1가지 AI 액션 선언문",
+      "56. 클로징 & Q&A (Think with Data)"
+    ];
+
+    function showSlide(index) {
+      if (index < 1) index = 1;
+      if (index > totalSlides) index = totalSlides;
+
+      document.querySelectorAll('.slide').forEach((slide, idx) => {
+        slide.classList.remove('active');
+        if (idx + 1 === index) {
+          slide.classList.add('active');
+        }
+      });
+
+      currentSlide = index;
+      document.getElementById('slide-indicator').innerText = 
+        `${String(currentSlide).padStart(2, '0')} / ${String(totalSlides).padStart(2, '0')}`;
+      
+      const progressPercent = (currentSlide / totalSlides) * 100;
+      document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+      resizeStage();
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        showSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        showSlide(currentSlide - 1);
+      }
+    }
+
+    // Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.target instanceof Element && e.target.closest('a, button, summary, input, textarea, select, [contenteditable="true"]')) return;
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key.toLowerCase() === 'o') {
+        toggleOverview();
+      } else if (e.key.toLowerCase() === 'f') {
+        toggleFullscreen();
+      }
+    });
+
+    // Overview Generator
+    function initOverview() {
+      const list = document.getElementById('overview-list');
+      list.innerHTML = '';
+      titles.forEach((t, i) => {
+        const item = document.createElement('div');
+        item.className = "p-2 bg-neutral-800 hover:bg-[#c59b6d] hover:text-neutral-900 rounded-lg text-neutral-300 cursor-pointer transition flex items-center justify-between text-[11px]";
+        item.innerHTML = `<span class="truncate">${t}</span><span class="text-[9px] opacity-60 ml-1">#${i+1}</span>`;
+        item.onclick = () => {
+          showSlide(i + 1);
+          toggleOverview();
+        };
+        list.appendChild(item);
+      });
+    }
+
+    function toggleOverview() {
+      const modal = document.getElementById('overview-modal');
+      modal.classList.toggle('active');
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // PDF Print Handler
+    function printPresentation() {
+      window.print();
+    }
+
+    // Safe Clipboard Copy Helper
+    function copyPrompt(elementId) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      const text = el.innerText || el.textContent;
+
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showToast("프롬프트가 복사되었습니다! AI 대화창에 붙여넣으세요.");
+        } else {
+          showToast("텍스트를 직접 드래그하여 복사해주세요.");
+        }
+      } catch (err) {
+        showToast("직접 드래그하여 복사해주세요.");
+      }
+      document.body.removeChild(textarea);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      toastMsg.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2400);
+    }
+
+    // Quiz Toggle Logic
+    function toggleQuizAnswer(el) {
+      el.classList.toggle('revealed');
+    }
+
+    function revealAllQuizzes() {
+      document.querySelectorAll('.quiz-card').forEach(card => card.classList.add('revealed'));
+    }
+
+    function resetAllQuizzes() {
+      document.querySelectorAll('.quiz-card').forEach(card => card.classList.remove('revealed'));
+      showToast("정답이 모두 숨김 처리(리셋)되었습니다.");
+    }
+
+    // Responsive Canvas scaling
+    function resizeStage() {
+      const stage = document.getElementById('presentation-stage');
+      const slides = document.querySelectorAll('.slide');
+      const stageWidth = stage.clientWidth - 40;
+      const stageHeight = stage.clientHeight - 30;
+      
+      const scaleX = stageWidth / 1280;
+      const scaleY = stageHeight / 720;
+      const scale = Math.min(scaleX, scaleY, 1.12);
+
+      slides.forEach(slide => {
+        if (slide.classList.contains('active')) {
+          slide.style.transform = `scale(${scale})`;
+        } else {
+          slide.style.transform = `scale(${scale * 0.96})`;
+        }
+      });
+    }
+
+    window.addEventListener('resize', resizeStage);
+    window.addEventListener('DOMContentLoaded', () => {
+      initOverview();
+      showSlide(1);
+    });
+  </script>
+</body>
+</html>
