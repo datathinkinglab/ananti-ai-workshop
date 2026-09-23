@@ -107,6 +107,35 @@
       z-index: 10;
     }
 
+    /* Full-slide chapter dividers between workshop modules */
+    .module-divider {
+      background: radial-gradient(circle at 82% 30%, rgba(197, 155, 109, 0.17), transparent 32%),
+                  linear-gradient(135deg, #171c21 0%, #0c0f12 100%);
+      color: #ffffff;
+      padding: 56px 72px;
+      justify-content: space-between;
+    }
+    .module-divider::before {
+      content: '';
+      position: absolute;
+      left: 72px;
+      right: 72px;
+      top: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #c59b6d, rgba(197, 155, 109, 0));
+    }
+    .module-divider .divider-number {
+      position: absolute;
+      right: 62px;
+      top: 112px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 270px;
+      font-weight: 800;
+      line-height: 1;
+      color: rgba(197, 155, 109, 0.075);
+      pointer-events: none;
+    }
+
     /* Standard Slide Header */
     .slide-header {
       padding: 24px 48px 12px 48px;
@@ -1006,6 +1035,21 @@
       </div>
     </div>
 
+    <!-- Module 1 divider -->
+    <div class="slide module-divider" id="module-divider-1" data-overview-title="MODULE 01 · 업무에 맞는 AI 도구 선택">
+      <span class="divider-number" aria-hidden="true">01</span>
+      <div class="flex items-center justify-between relative z-10">
+        <span class="text-sm font-bold tracking-[0.22em] text-[#c59b6d]">ANANTI × DATA THINKING LAB</span>
+        <span class="text-sm tracking-[0.18em] text-neutral-400">MODULE 01 / 05</span>
+      </div>
+      <div class="relative z-10 max-w-3xl">
+        <p class="text-xl font-semibold text-[#c59b6d] mb-5">도구 선택과 실무 비교</p>
+        <h2 class="text-6xl font-extrabold leading-tight tracking-tight mb-7">업무에 맞는 AI를<br>선택하다</h2>
+        <p class="text-xl leading-relaxed text-neutral-300">같은 질문을 여러 도구에 던져 보고, 아난티 업무에 맞는 활용법을 찾습니다.</p>
+      </div>
+      <div class="relative z-10 border-t border-neutral-700 pt-5 text-sm text-neutral-400">NEXT · 3대 AI 도구의 강점과 한계 비교</div>
+    </div>
+
     <!-- Slide 9: Module 1 오프닝 -->
     <div class="slide" id="slide-9">
       <div class="slide-header">
@@ -1303,6 +1347,21 @@
         <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
         <span>© 2026 Data Thinking Lab. All rights reserved.</span>
       </div>
+    </div>
+
+    <!-- Module 2 divider -->
+    <div class="slide module-divider" id="module-divider-2" data-overview-title="MODULE 02 · 안전한 데이터 활용">
+      <span class="divider-number" aria-hidden="true">02</span>
+      <div class="flex items-center justify-between relative z-10">
+        <span class="text-sm font-bold tracking-[0.22em] text-[#c59b6d]">ANANTI × DATA THINKING LAB</span>
+        <span class="text-sm tracking-[0.18em] text-neutral-400">MODULE 02 / 05</span>
+      </div>
+      <div class="relative z-10 max-w-3xl">
+        <p class="text-xl font-semibold text-[#c59b6d] mb-5">AI 데이터 보안과 정제</p>
+        <h2 class="text-6xl font-extrabold leading-tight tracking-tight mb-7">업로드 전에<br>판단하다</h2>
+        <p class="text-xl leading-relaxed text-neutral-300">사내 승인 기준을 확인하고, 식별정보와 데이터 오류를 먼저 점검합니다.</p>
+      </div>
+      <div class="relative z-10 border-t border-neutral-700 pt-5 text-sm text-neutral-400">NEXT · 데이터 입력 기준과 정제 실습</div>
     </div>
 
     <!-- Slide 15: Module 2 오프닝 -->
@@ -1762,6 +1821,21 @@
         <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
         <span>© 2026 Data Thinking Lab. All rights reserved.</span>
       </div>
+    </div>
+
+    <!-- Module 3 divider -->
+    <div class="slide module-divider" id="module-divider-3" data-overview-title="MODULE 03 · 데이터에서 의사결정으로">
+      <span class="divider-number" aria-hidden="true">03</span>
+      <div class="flex items-center justify-between relative z-10">
+        <span class="text-sm font-bold tracking-[0.22em] text-[#c59b6d]">ANANTI × DATA THINKING LAB</span>
+        <span class="text-sm tracking-[0.18em] text-neutral-400">MODULE 03 / 05</span>
+      </div>
+      <div class="relative z-10 max-w-3xl">
+        <p class="text-xl font-semibold text-[#c59b6d] mb-5">대화형 데이터 분석</p>
+        <h2 class="text-6xl font-extrabold leading-tight tracking-tight mb-7">숫자에서<br>판단으로 나아가다</h2>
+        <p class="text-xl leading-relaxed text-neutral-300">결제 데이터를 교차 분석하고, 현장에서 실행할 질문과 가설을 만듭니다.</p>
+      </div>
+      <div class="relative z-10 border-t border-neutral-700 pt-5 text-sm text-neutral-400">NEXT · 데이터 질문 설계와 매출 분석</div>
     </div>
 
     <!-- Slide 24: Module 3 오프닝 -->
@@ -2309,6 +2383,21 @@
       </div>
     </div>
 
+    <!-- Module 4 divider -->
+    <div class="slide module-divider" id="module-divider-4" data-overview-title="MODULE 04 · VOC에서 서비스 기획으로">
+      <span class="divider-number" aria-hidden="true">04</span>
+      <div class="flex items-center justify-between relative z-10">
+        <span class="text-sm font-bold tracking-[0.22em] text-[#c59b6d]">ANANTI × DATA THINKING LAB</span>
+        <span class="text-sm tracking-[0.18em] text-neutral-400">MODULE 04 / 05</span>
+      </div>
+      <div class="relative z-10 max-w-3xl">
+        <p class="text-xl font-semibold text-[#c59b6d] mb-5">VOC 분석과 고객경험 기획</p>
+        <h2 class="text-6xl font-extrabold leading-tight tracking-tight mb-7">고객의 목소리를<br>서비스로 바꾸다</h2>
+        <p class="text-xl leading-relaxed text-neutral-300">리뷰 속 불편을 찾고, 검증 가능한 고객경험 개선안을 설계합니다.</p>
+      </div>
+      <div class="relative z-10 border-t border-neutral-700 pt-5 text-sm text-neutral-400">NEXT · VOC 분류와 1-Page CX 기획안</div>
+    </div>
+
     <!-- Slide 37: Module 4 오프닝 -->
     <div class="slide" id="slide-37">
       <div class="slide-header">
@@ -2674,6 +2763,21 @@
         <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#c59b6d]"></span><span class="font-bold text-neutral-600">Data Thinking Lab</span></div>
         <span>© 2026 Data Thinking Lab. All rights reserved.</span>
       </div>
+    </div>
+
+    <!-- Module 5 divider -->
+    <div class="slide module-divider" id="module-divider-5" data-overview-title="MODULE 05 · 대화로 만드는 업무 대시보드">
+      <span class="divider-number" aria-hidden="true">05</span>
+      <div class="flex items-center justify-between relative z-10">
+        <span class="text-sm font-bold tracking-[0.22em] text-[#c59b6d]">ANANTI × DATA THINKING LAB</span>
+        <span class="text-sm tracking-[0.18em] text-neutral-400">MODULE 05 / 05</span>
+      </div>
+      <div class="relative z-10 max-w-3xl">
+        <p class="text-xl font-semibold text-[#c59b6d] mb-5">바이브코딩과 웹앱 제작</p>
+        <h2 class="text-6xl font-extrabold leading-tight tracking-tight mb-7">대화로<br>업무 도구를 만들다</h2>
+        <p class="text-xl leading-relaxed text-neutral-300">분석 결과를 한눈에 보는 HTML 대시보드로 구현하고 시연합니다.</p>
+      </div>
+      <div class="relative z-10 border-t border-neutral-700 pt-5 text-sm text-neutral-400">NEXT · 단일 파일 대시보드 제작 실습</div>
     </div>
 
     <!-- Slide 46: Module 5 오프닝 -->
@@ -3153,11 +3257,11 @@
     <div class="flex items-center gap-3 text-xs text-neutral-300">
       <span class="font-bold text-[#c59b6d]">아난티 AI 실무 과정</span>
       <span class="text-neutral-600">|</span>
-      <span id="slide-indicator" class="font-mono text-neutral-400">01 / 56</span>
+      <span id="slide-indicator" class="font-mono text-neutral-400">01 / 61</span>
     </div>
 
     <div class="w-2/5 bg-neutral-800 h-1.5 rounded-full overflow-hidden">
-      <div id="progress-bar" class="bg-[#c59b6d] h-full transition-all duration-300" style="width: 1.78%;"></div>
+      <div id="progress-bar" class="bg-[#c59b6d] h-full transition-all duration-300" style="width: 1.64%;"></div>
     </div>
 
     <div class="flex items-center gap-2">
@@ -3185,7 +3289,7 @@
     <div class="bg-[#171a1d] border border-neutral-700 rounded-2xl p-6 max-w-5xl w-full max-h-[85vh] overflow-y-auto" onclick="event.stopPropagation()">
       <div class="flex justify-between items-center mb-4 pb-3 border-b border-neutral-700 text-white">
         <h3 class="font-bold text-base flex items-center gap-2 text-[#c59b6d]">
-          <i class="fa-solid fa-list-ol"></i> 슬라이드 전체 목차 (총 56장)
+          <i class="fa-solid fa-list-ol"></i> 슬라이드 전체 목차 (<span id="overview-total">총 61장</span>)
         </h3>
         <button onclick="toggleOverview()" class="text-neutral-400 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i> 닫기</button>
       </div>
@@ -3203,72 +3307,18 @@
 
   <script>
     let currentSlide = 1;
-    const totalSlides = 56;
-
-    const titles = [
-      "01. 워크숍 오프닝 (표지)",
-      "02. 강사 소개 (이승묵 박사)",
-      "03. 실무자 페인포인트 진단",
-      "04. 오늘 손에 쥘 4종 산출물",
-      "05. 5단계 역량 완성 여정",
-      "06. 비대면(Zoom) 간편 상호작용",
-      "07. [실습 0-1] 작업 환경 & 패들렛 셋업",
-      "08. [실습 0-2] 3종 데이터셋 구조 확인",
-      "09. M1. 도구 선택 & 실무 비교 개요",
-      "10. 아난티 업무별 3대 도구 매핑",
-      "11. 글로벌 호텔/리조트 AX 트렌드",
-      "12. [실습 1-1] 주중 F&B 활성화 도구별 질의",
-      "13. [실습 1-2] 두 도구의 답변 해부 대조",
-      "14. [클리닉 1] 10초 채팅 투표 소통",
-      "15. M2. AI 보안 3단계 판정 개요",
-      "16. 데이터 유출 방지: Opt-out 설정법",
-      "17. 아난티 3단계 신호등 매트릭스",
-      "18. 실무 퀴즈 (클릭하여 정답 확인)",
-      "19. 데이터 정제의 법칙 (GIGO)",
-      "20. [실습 2-1] 기초정보 DB 위험컬럼 진단",
-      "21. [실습 2-2] 가상 고객 데이터 마스킹 절차",
-      "22. [실습 2-3] 오프라인 결제 결측·환불 정제",
-      "23. [클리닉 2] 패들렛 1열 인증 & 점검",
-      "24. M3. 대화형 데이터 입체 분석 개요",
-      "25. 데이터 분석 질문 5대 프레임워크",
-      "26. 근거와 계산 기준을 명확히 하는 PTCO",
-      "27. Bad vs Good 프롬프트 비교 대조",
-      "28. [실습 3-1] 요일/시간대별 매출 피크 추적",
-      "29. [실습 3-2] 업장별 객단가 편차 분석",
-      "30. [실습 3-3] 주중 매출 급감 이상치 탐색",
-      "31. 이종 DB 자연어 결합(Join) 원리",
-      "32. [실습 3-4] 회원등급 x 결제 교차 조인",
-      "33. [실습 3-5] VIP 고객 소비 행동 심층 분석",
-      "34. [실습 3-6] 현장 지배인 3줄 액션 플랜",
-      "35. [클리닉 3-1] 통계 분모 오류 크로스 체크",
-      "36. [클리닉 3-2] 줌 채팅 발견 공유",
-      "37. M4. VOC 텍스트 마이닝 개요",
-      "38. 비정형 VOC 분석 3단계 원리",
-      "39. [실습 4-1] VOC 120건 4대 영역 자동분류",
-      "40. [실습 4-2] 감성 태깅 & 불만 원인 Top 3",
-      "41. 조식 대기 불만과 검증할 운영 가설",
-      "42. [실습 4-3] 웰니스 트렌드 팩트 리서치",
-      "43. [실습 4-4] 문제 + 트렌드 융합 기획",
-      "44. [실습 4-5] 1-Page CX 서비스 기획안",
-      "45. [클리닉 4] 패들렛 갤러리 워크 & 투표",
-      "46. M5. 바이브코딩 대시보드 웹앱 개요",
-      "47. 웹 화면을 만드는 3가지 요소 (HTML/CSS/JS)",
-      "48. 왜 단일 파일 HTML(Single File)인가?",
-      "49. [실습 5-1] 아난티 대시보드 단일 코드 생성",
-      "50. [실습 5-2] 3단계 실행 (복사-저장-더블클릭)",
-      "51. [실습 5-3] 대화형 바이브코딩 기능 추가",
-      "52. [Option B] 주간 자동분석 AI 에이전트",
-      "53. [클리닉 5] 나의 첫 대시보드 시연",
-      "54. 4대 실무 산출물 최종 확인 점검표",
-      "55. [실습 6] 내일의 1가지 AI 액션 선언문",
-      "56. 클로징 & Q&A (Think with Data)"
-    ];
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const totalSlides = slides.length;
+    const titles = slides.map((slide, index) => {
+      const heading = slide.querySelector('.slide-title, h1, h2');
+      return slide.dataset.overviewTitle || heading?.textContent?.replace(/\s+/g, ' ').trim() || `슬라이드 ${index + 1}`;
+    });
 
     function showSlide(index) {
       if (index < 1) index = 1;
       if (index > totalSlides) index = totalSlides;
 
-      document.querySelectorAll('.slide').forEach((slide, idx) => {
+      slides.forEach((slide, idx) => {
         slide.classList.remove('active');
         if (idx + 1 === index) {
           slide.classList.add('active');
@@ -3315,10 +3365,12 @@
     // Overview Generator
     function initOverview() {
       const list = document.getElementById('overview-list');
+      document.getElementById('overview-total').textContent = `총 ${totalSlides}장`;
       list.innerHTML = '';
       titles.forEach((t, i) => {
         const item = document.createElement('div');
         item.className = "p-2 bg-neutral-800 hover:bg-[#c59b6d] hover:text-neutral-900 rounded-lg text-neutral-300 cursor-pointer transition flex items-center justify-between text-[11px]";
+        item.title = t;
         item.innerHTML = `<span class="truncate">${t}</span><span class="text-[9px] opacity-60 ml-1">#${i+1}</span>`;
         item.onclick = () => {
           showSlide(i + 1);
