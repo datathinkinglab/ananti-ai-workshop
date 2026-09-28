@@ -419,7 +419,7 @@
           <rect x="65" y="60" width="14" height="14" rx="3.5" fill="#94a3b8"/>
           <rect x="85" y="60" width="14" height="14" rx="3.5" fill="#cbd5e1"/>
         </svg>
-        <div class="flex flex-col leading-tight">
+        <div class="hidden sm:flex flex-col leading-tight">
           <span class="font-extrabold text-sm tracking-tight text-white group-hover:text-[#c59b6d] transition font-sans">Data Thinking Lab</span>
           <span class="text-[10px] text-neutral-400 font-medium tracking-wide">AI · Data Advisor</span>
         </div>
@@ -430,6 +430,10 @@
     </button>
 
     <div class="flex items-center gap-3 text-xs">
+      <a href="ot.html" target="_blank" rel="noopener" class="bg-neutral-800 hover:bg-neutral-700 text-[#e6cbaf] border border-[#936a44] px-3 py-1 rounded flex items-center gap-1.5 transition" aria-label="교육팀 OT 자료를 새 탭에서 보기">
+        <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
+        <span>OT 자료</span>
+      </a>
       <details class="sample-download-menu">
         <summary class="bg-neutral-800 hover:bg-neutral-700 text-neutral-100 border border-neutral-600 px-3 py-1 rounded flex items-center gap-1.5 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400">
           <i class="fa-solid fa-download" aria-hidden="true"></i>
@@ -449,12 +453,12 @@
           </a>
         </div>
       </details>
-      <a href="https://padlet.com/datathinkinglab/ananti" target="_blank" class="bg-amber-950/60 hover:bg-amber-900 text-amber-300 border border-amber-700/50 px-3 py-1 rounded flex items-center gap-1.5 transition">
+      <a href="https://padlet.com/datathinkinglab/ananti" target="_blank" class="bg-amber-950/60 hover:bg-amber-900 text-amber-300 border border-amber-700/50 px-3 py-1 rounded flex items-center gap-1.5 transition" aria-label="전용 패들렛 새 탭에서 열기">
         <i class="fa-solid fa-chalkboard"></i>
-        <span>전용 패들렛 (Padlet)</span>
+        <span class="hidden sm:inline">전용 패들렛 (Padlet)</span>
         <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
       </a>
-      <a href="https://www.datathinkinglab.com" target="_blank" class="text-neutral-400 hover:text-neutral-200 flex items-center gap-1 transition">
+      <a href="https://www.datathinkinglab.com" target="_blank" class="hidden md:flex text-neutral-400 hover:text-neutral-200 items-center gap-1 transition">
         <i class="fa-solid fa-globe"></i>
         <span class="hidden md:inline">datathinkinglab.com</span>
       </a>
