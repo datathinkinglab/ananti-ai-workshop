@@ -15,12 +15,18 @@
     .sub { margin: 0; color: #aab2bd; font-size: 12px; }
     nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
     a { color: inherit; text-decoration: none; }
-    nav a { display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: 7px 12px; border: 1px solid #4a525b; border-radius: 7px; color: #e8e9eb; font-size: 13px; font-weight: 700; white-space: nowrap; }
-    nav a:hover, nav a:focus-visible { border-color: #c59b6d; color: #f3d3b0; }
+    nav a, nav button { display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: 7px 12px; border: 1px solid #4a525b; border-radius: 7px; background: transparent; color: #e8e9eb; font: inherit; font-size: 13px; font-weight: 700; white-space: nowrap; cursor: pointer; }
+    nav a:hover, nav a:focus-visible, nav button:hover, nav button:focus-visible { border-color: #c59b6d; color: #f3d3b0; }
+    nav .screen-button { border-color: #936a44; color: #f3d3b0; }
     nav a.primary { background: #c59b6d; border-color: #c59b6d; color: #111417; }
     nav a.primary:hover, nav a.primary:focus-visible { background: #d5ae83; color: #111417; }
     main { padding: 18px 24px 24px; }
-    .viewer { width: 100%; height: calc(100vh - 160px); min-height: 480px; border: 1px solid #30363d; border-radius: 10px; background: #1b2026; }
+    .viewer-shell { position: relative; }
+    .viewer { display: block; width: 100%; height: calc(100vh - 160px); min-height: 480px; border: 1px solid #30363d; border-radius: 10px; background: #1b2026; }
+    .fullscreen-exit { display: none; position: absolute; z-index: 2; top: 14px; right: 18px; padding: 9px 13px; border: 1px solid #c59b6d; border-radius: 7px; background: #111417; color: #f3d3b0; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+    .viewer-shell:fullscreen { width: 100vw; height: 100vh; background: #090b0d; }
+    .viewer-shell:fullscreen .viewer { width: 100%; height: 100%; min-height: 0; border: 0; border-radius: 0; }
+    .viewer-shell:fullscreen .fullscreen-exit { display: block; }
     .fallback { margin: 10px 0 0; color: #aab2bd; font-size: 12px; }
     .fallback a { color: #e6b985; text-decoration: underline; }
     @media (max-width: 640px) {
@@ -42,13 +48,44 @@
     </div>
     <nav aria-label="자료 메뉴">
       <a href="ananti_lecture_note.html">강의 노트</a>
+      <button id="fullscreen-button" class="screen-button" type="button" aria-controls="pdf-viewer" aria-pressed="false">전체 화면</button>
       <a href="ot/강사_전달용.pdf" target="_blank" rel="noopener">PDF 새 창</a>
       <a class="primary" href="ot/강사_전달용.pdf" download="강사_전달용.pdf">PDF 다운로드</a>
     </nav>
   </header>
   <main>
-    <iframe class="viewer" src="ot/강사_전달용.pdf#view=FitH" title="아난티 교육팀 OT PDF 전체 5쪽"></iframe>
+    <div class="viewer-shell" id="viewer-shell">
+      <iframe class="viewer" id="pdf-viewer" src="ot/강사_전달용.pdf#view=FitH" title="아난티 교육팀 OT PDF 전체 5쪽" tabindex="0"></iframe>
+      <button class="fullscreen-exit" id="fullscreen-exit" type="button">전체 화면 종료 (Esc)</button>
+    </div>
     <p class="fallback">PDF가 화면에 표시되지 않으면 <a href="ot/강사_전달용.pdf" target="_blank" rel="noopener">새 창에서 열어주세요.</a></p>
   </main>
+  <script>
+    const shell = document.getElementById('viewer-shell');
+    const viewer = document.getElementById('pdf-viewer');
+    const enterButton = document.getElementById('fullscreen-button');
+    const exitButton = document.getElementById('fullscreen-exit');
+
+    enterButton.addEventListener('click', async () => {
+      if (!shell.requestFullscreen) {
+        window.open('ot/강사_전달용.pdf', '_blank', 'noopener');
+        return;
+      }
+      try {
+        await shell.requestFullscreen();
+        viewer.focus();
+      } catch {
+        window.alert('전체 화면을 열 수 없습니다. PDF 새 창 버튼을 이용해 주세요.');
+      }
+    });
+
+    exitButton.addEventListener('click', () => {
+      if (document.fullscreenElement) document.exitFullscreen();
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+      enterButton.setAttribute('aria-pressed', String(document.fullscreenElement === shell));
+    });
+  </script>
 </body>
 </html>
